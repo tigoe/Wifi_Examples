@@ -2,3 +2,4 @@
 *.vscode/*
 *arduino_secrets.h
 ConnDevClient/arduino_secrets.h
+*keys.txt
