@@ -1,3 +1,4 @@
 *.DS_Store
 *.vscode/*
 *arduino_secrets.h
+ConnDevClient/arduino_secrets.h
