@@ -55,10 +55,17 @@ void loop() {
   String sensorData = "{\"temperature\":";
   sensorData += String(temperature);
   sensorData += "}";
+  
   // use this for POST:
-  postData(sensorData);
+  // postData(sensorData);
   //  or use this for GET:
-  //getData();
+  getData();
+
+  int transactionID = 539;
+  //  or use this to GET one datum:
+  //getDatum(transactionID);
+  //  or use this to DELETE one datum:
+  //deleteDatum(transactionID);
 
   // read the status code and body of the response
   int statusCode = client.responseStatusCode();
@@ -92,16 +99,68 @@ void postData(String newData) {
 }
 
 void getData() {
-  // the template for the query string of the GET request:
-  String queryString = "?macAddress=MAC&sessionKey=KEY";
-  // replace the template placeholders with actual values
-  queryString.replace("MAC", macToString(mac));
-  queryString.replace("KEY", SECRET_SESSIONKEY);
+  // set the content type and fill in the body:
+  String contentType = "application/json";
+  // the template for the body of the POST request:
+  String body = " {\"macAddress\":\"MAC\",\"sessionKey\":\"KEY\"}";
+  // replace the template placeholders with actual values:
+  body.replace("MAC", macToString(mac));
+  body.replace("KEY", SECRET_SESSIONKEY);
+
+  // make the request:
+  client.beginRequest();
+  client.get(route);
+  client.sendHeader("Content-Type", "application/json");
+  client.sendHeader("Content-Length", body.length());
+  client.beginBody();
+  client.print(body);
+  client.endRequest();
+}
+
+void getDatum(int newData) {
+  // set the content type and fill in the body:
+  String contentType = "application/json";
+  // the template for the body of the POST request:
+  String body = " {\"macAddress\":\"MAC\",\"sessionKey\":\"KEY\"}";
+  // replace the template placeholders with actual values:
+  body.replace("MAC", macToString(mac));
+  body.replace("KEY", SECRET_SESSIONKEY);
 
   // add the query to the route:
-  String request = route + queryString;
+  String request = route + "/";
+  request += String(newData);
   // make the request:
+  client.beginRequest();
   client.get(request);
+  client.sendHeader("Content-Type", "application/json");
+  client.sendHeader("Content-Length", body.length());
+  client.beginBody();
+  client.print(body);
+  client.endRequest();
+}
+
+
+
+void deleteDatum(int newData) {
+  // set the content type and fill in the body:
+  String contentType = "application/json";
+  // the template for the body of the POST request:
+  String body = " {\"macAddress\":\"MAC\",\"sessionKey\":\"KEY\"}";
+  // replace the template placeholders with actual values:
+  body.replace("MAC", macToString(mac));
+  body.replace("KEY", SECRET_SESSIONKEY);
+
+  // add the query to the route:
+  String request = route + "/";
+  request += String(newData);
+  // make the request:
+  client.beginRequest();
+  client.del(request);
+  client.sendHeader("Content-Type", "application/json");
+  client.sendHeader("Content-Length", body.length());
+  client.beginBody();
+  client.print(body);
+  client.endRequest();
 }
 
 // convert the MAC address to a String:
