@@ -56,9 +56,9 @@ void loop() {
   sensorData += String(temperature);
   sensorData += "}";
   // use this for POST:
-  //postData(sensorData);
-  // or use this for GET:
-  getData();
+  postData(sensorData);
+  //  or use this for GET:
+  //getData();
 
   // read the status code and body of the response
   int statusCode = client.responseStatusCode();
@@ -75,15 +75,18 @@ void loop() {
 }
 
 void postData(String newData) {
+  // have to insert extra \ before " in data JSON,
+  // since it's a JSON string within a JSON string:
+  newData.replace("\"", "\\\"");
   // set the content type and fill in the POST data:
-  String contentType = "application/x-www-form-urlencoded";
+  String contentType = "application/json";
   // the template for the body of the POST request:
-  String body = "macAddress=MAC&sessionKey=KEY&data=DATA";
+  String body = " {\"macAddress\":\"MAC\",\"sessionKey\":\"KEY\",\"data\":\"DATA\"}";
   // replace the template placeholders with actual values:
   body.replace("MAC", macToString(mac));
   body.replace("KEY", SECRET_SESSIONKEY);
   body.replace("DATA", newData);
-
+  Serial.println(body);
   // make the request
   client.post(route, contentType, body);
 }
