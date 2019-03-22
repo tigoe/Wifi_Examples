@@ -9,7 +9,8 @@
 */
 
 #include <SPI.h>
-#include <WiFi101.h>
+#include <WiFi101.h> // use this for MKR1000
+//#include <WiFi101.h> // use this for MKR1010
 #include <RTCZero.h>
 #include "arduino_secrets.h"
 
