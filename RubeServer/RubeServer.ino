@@ -43,7 +43,7 @@ int lastSecond = 0;     // the seconds last time through the loop
 
 // realtime clock:
 RTCZero rtc;
-// start time in UTC (GMT) (change this for your location):
+// start time in UTC (GMT) (change this for your location, always in UTC):
 byte launch[] = {21, 30, 00};
 // remaining countdown time:
 byte countDown[] = {0, 0, 0};
@@ -64,7 +64,6 @@ void setup() {
     Serial.println(F("SSD1306 setup failed"));
     while (true);
   }
-  displayWrite("connecting");
   // start realtime clock:
   rtc.begin();
   // connect:
@@ -141,6 +140,7 @@ void loop() {
 }
 
 void connectToNetwork() {
+   displayWrite("connecting");
   // try to connect to the network:
   while ( WiFi.status() != WL_CONNECTED) {
     //Connect to WPA / WPA2 network:
