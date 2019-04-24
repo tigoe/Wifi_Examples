@@ -1,32 +1,33 @@
 /*
   Rube Goldberg web server
 
-When it gets an HTTP request with the right type of request
-for the right path, and with the right body, it starts a countdown
-until the launch time. Then it runs a launch function.
+  When it gets an HTTP request with the right type of request
+  for the right path, and with the right body, it starts a countdown
+  until the launch time. Then it runs a launch function.
 
-The functions you care about are:
+  The functions you care about are:
 
-String timeLeft()
-    runs once a second from when the server gets a good hit 
+  String timeLeft()
+    runs once a second from when the server gets a good hit
     to when the machine is supposed to start
 
-void startMachine() {
+  void startMachine() {
    runs when the machine is supposed to start
 
-Be sure to add a file arduino_secrets.h with:
-#define SECRET_SSID // your network SSID (name)
-#define SECRET_PASS // your network password
-#define SECRET_PATH // verb and path
-#define SECRET_BODY // string for the body of the request
+  Be sure to add a file arduino_secrets.h with:
+  #define SECRET_SSID // your network SSID (name)
+  #define SECRET_PASS // your network password
+  #define SECRET_PATH // verb and path
+  #define SECRET_BODY // string for the body of the request
 
-created 12 April 2019
-by Tom Igoe
+  created 12 April 2019
+  by Tom Igoe
 */
 
 #include <SPI.h>
 //#include <WiFi101.h>  // if you are using a MKR 1000
 #include <WiFiNINA.h>   // or a MKR 1010
+#include <SD.h>
 #include "arduino_secrets.h"
 #include <RTCZero.h>
 
@@ -51,8 +52,15 @@ byte countDown[] = {0, 0, 0};
 // OLED display:
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
-#define OLED_RESET     4 // Reset pin # (or -1 if sharing Arduino reset pin)
+#define OLED_RESET    -1 // Reset pin # (or -1 if sharing Arduino reset pin)
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+// SD card:
+const int SD_CHIP_SELECT = 4;
+String logFile = "DATALOG.CSV";  // data file name
+bool SDAvailable = false;        // SD card slot working?
+bool displayAvailable = false;    // display working?
+volatile bool logWritten = false;// log entry written?
 
 
 void setup() {
@@ -60,10 +68,24 @@ void setup() {
   Serial.begin(9600);// initialize serial communications
 
   // initialize the display library:
-  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3C for 128x32
-    Serial.println(F("SSD1306 setup failed"));
-    while (true);
+  displayAvailable = display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  Serial.println("display working: " + String(displayAvailable));
+  // initialize SD card:
+  SDAvailable = SD.begin(SD_CHIP_SELECT);
+  Serial.println("Card working: " + String(SDAvailable));
+  // if either is not working, stop:
+  while (!displayAvailable || !SDAvailable) {
+    // stop and do nothing
   }
+
+  // open the data file:
+  File dataFile = SD.open(logFile, FILE_WRITE);
+  // write a header to the file:
+  if (dataFile) {
+    dataFile.println("date:,time, client IP");
+    dataFile.close();
+  }
+
   // start realtime clock:
   rtc.begin();
   // connect:
@@ -107,6 +129,18 @@ void loop() {
       Serial.print("client address: ");
       Serial.println(client.remoteIP());
 
+     // Log client address to the data file:
+      File dataFile = SD.open(logFile, FILE_WRITE);
+      // write a header to the file:
+      if (dataFile) {
+        dataFile.print(getDateStamp());
+        dataFile.print(",");
+        dataFile.print(getTimeStamp());
+        dataFile.print(",");
+        dataFile.println(client.remoteIP());
+        dataFile.close();
+      }
+       
       // if it's the right kind of request and the right body:
       if (client.find(SECRET_PATH)) {
         if (client.find(SECRET_BODY)) {
@@ -129,7 +163,7 @@ void loop() {
       client.println("\n\n"); // send an HTTP response
       client.print("Thanks. time at our end: "); // send an HTTP response
       client.println(getTimeStamp()); // send an HTTP response
-      
+
       // wait a little before disconnecting them:
       delay(10);                       // give the server time to get the data
       if (client.connected()) {        // if the client's still connected
@@ -140,7 +174,7 @@ void loop() {
 }
 
 void connectToNetwork() {
-   displayWrite("connecting");
+  displayWrite("connecting");
   // try to connect to the network:
   while ( WiFi.status() != WL_CONNECTED) {
     //Connect to WPA / WPA2 network:
@@ -181,6 +215,20 @@ String getTimeStamp() {
 }
 
 
+// format the date as dd-mm-yyyy:
+String getDateStamp() {
+  String datestamp = "";
+  if (rtc.getDay() <= 9) datestamp += "0";
+  datestamp += rtc.getDay();
+  datestamp += "-";
+  if (rtc.getMonth() <= 9) datestamp += "0";
+  datestamp += rtc.getMonth();
+  // add century:
+  datestamp += "-20";
+  if (rtc.getYear() <= 9) datestamp += "0";
+  datestamp += rtc.getYear();
+  return datestamp;
+}
 
 // this function runs once a second from when the server
 // gets a good hit to when the machine is supposed to start:
@@ -191,19 +239,19 @@ String timeLeft() {
   if (rtc.getHours() <= launch[0]) {
     countDown[0] = launch[0] - rtc.getHours();
   }
- // if  minutes are less than launch time:
+  // if  minutes are less than launch time:
   if (rtc.getMinutes() <= launch[1]) {
     countDown[1] = launch[1] - rtc.getMinutes();
   } else {
     countDown[1] = abs(launch[1] - (60 - rtc.getMinutes()));
   }
- // if  seconds are less than launch time:
+  // if  seconds are less than launch time:
   if (rtc.getSeconds() <= launch[2]) {
     countDown[2] = launch[2] - rtc.getSeconds();
   } else {
     countDown[2] = abs(launch[2] - (60 - rtc.getSeconds()));
   }
-// make a string with the countdown time:
+  // make a string with the countdown time:
   String result = "";
   for (int i = 0; i < 3; i++) {
     result += String(countDown[i]);
