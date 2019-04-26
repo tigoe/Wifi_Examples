@@ -5,22 +5,22 @@
   for the right path, and with the right body, it starts a countdown
   until the launch time. Then it runs a launch function.
 
-  The functions you care about are:
-
-  String timeLeft()
-    runs once a second from when the server gets a good hit
-    to when the machine is supposed to start
-
+  The parts you care about are:
   void startMachine() {
    runs when the machine is supposed to start
+
+change this for your location, always in UTC. If you need an epoch converter,
+use https://www.epochconverter.com/ 
 
   Be sure to add a file arduino_secrets.h with:
   #define SECRET_SSID // your network SSID (name)
   #define SECRET_PASS // your network password
   #define SECRET_PATH // verb and path
   #define SECRET_BODY // string for the body of the request
-
+  #define SECRET_LAUNCHTIME  // start time in UTC epoch
+ 
   created 12 April 2019
+  modified 26 April 2019
   by Tom Igoe
 */
 
@@ -39,16 +39,10 @@
 #include "font.h"
 
 WiFiServer server(80);  // make an instance of the server class
-bool counting = false;  // whether you're counting down or not
 int reconnects = 0;     // how many times you've reconnected to network
-int lastSecond = 0;     // the seconds last time through the loop
 
 // realtime clock:
 RTCZero rtc;
-// start time in UTC (GMT) (change this for your location, always in UTC):
-byte launch[] = {21, 30, 00};
-// remaining countdown time:
-byte countDown[] = {0, 0, 0};
 
 // OLED display:
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
@@ -63,17 +57,32 @@ bool SDAvailable = false;        // SD card slot working?
 bool displayAvailable = false;    // display working?
 volatile bool logWritten = false;// log entry written?
 
-
 const int bananaPin = 0;        // pin number for the banana servo
 int bananaAngle = 0;            // banana starting angle
-int bananaMoving = false;       // banana state
+long lastServoMove = 0;         // last time the servo was updated
 Servo bananaServo;              // servo instance for banana
 
+// possible system statuses:
+const int RUBE_WAITING = 0;       // waiting for HTTP request
+const int RUBE_COUNTING = 1;      // counting down to end
+const int RUBE_RUNNING = 2;       // running the local activity
+const int RUBE_FINISHED = 3;      // finished
+int systemStatus = RUBE_WAITING;
+
+const int pushButton = 5;       // emergency pushbutton to trigger event
+
 void setup() {
+
   // initialize banana servo:
   bananaServo.attach(bananaPin);
+  bananaServo.write(bananaAngle);
 
   pinMode(LED_BUILTIN, OUTPUT);
+  // pushbutton activates system in an emergency:
+  pinMode(pushButton, INPUT_PULLUP);
+  // trigger the start when the button goes low:
+  attachInterrupt(digitalPinToInterrupt(pushButton), startMachine, FALLING);
+
   Serial.begin(9600);// initialize serial communications
 
   // initialize the display library:
@@ -110,34 +119,40 @@ void setup() {
 }
 
 void loop() {
+  String statusMessage = "";
+  // state machine, of sorts:
+  switch (systemStatus) {
+    case RUBE_WAITING:  // wait for trigger, display "waiting for request"
+      statusMessage = "Waiting for signal";
+      break;
+    case RUBE_COUNTING:  // count down, display time left
+      statusMessage = "T minus " + timeLeft();
+      break;
+    case  RUBE_RUNNING: // run servo
+      statusMessage = "Machine running!";
+      // increment banana angle, but constrain to 0-180:
+      bananaAngle = constrain(bananaAngle++, 0, 180);
+      // when you reach the end, stop the banana:
+      if (bananaAngle == 180) {
+        systemStatus = RUBE_FINISHED;
+      }
+      break;
+    case RUBE_FINISHED: // display "event ended"
+      statusMessage = "Event ended";
+      break;
+
+  }
+
+  // show the status:
+  displayWrite(statusMessage);
 
   // update the servo no matter what:
-  if (millis() - lastServoMove < 20) {
-    // if the banana should be moving, adjust the angle:
-    if (bananaMoving) {
-      // constrain banana angle to 0-180:
-      bananaAngle = constrain(bananaAngle++, 0, 180);
-      if (bananaAngle == 180) {
-        // when you reach the end, stop the banana:
-        bananaMoving = false;
-      }
-    }
+  if (millis() - lastServoMove > 20) {
     // write to the servo:
     bananaServo.write(bananaAngle);
+    lastServoMove = millis();
   }
 
-  // if you are counting down, display countdown:
-  if (counting) {
-    if (rtc.getSeconds() != lastSecond) {
-      Serial.println(timeLeft());
-      displayWrite("T minus " + timeLeft());
-      lastSecond = rtc.getSeconds();
-    }
-    // if you are not counting down, display current time:
-  } else {
-    String statusString = "now: " + getTimeStamp();
-    displayWrite(statusString);
-  }
   // if you're not connected to Wifi, reconnect:
   if (WiFi.status() != WL_CONNECTED) {
     digitalWrite(LED_BUILTIN, LOW);
@@ -148,6 +163,8 @@ void loop() {
   WiFiClient client = server.available();
   // while the client is connected,
   while (client.connected()) {
+    // display that you're responding to client:
+    displayWrite("Responding to client");
     // and there are incoming bytes to read,
     if (client.available()) {
       // print out client info:
@@ -170,12 +187,12 @@ void loop() {
       if (client.find(SECRET_PATH)) {
         if (client.find(SECRET_BODY)) {
 
-          // if you're not already counthing down:
-          if (!counting) {
+          // if you're not already counting down:
+          if (systemStatus != RUBE_COUNTING) {
             // enable the countdown:
-            counting = true;
+            systemStatus = RUBE_COUNTING;
             // set alarm for launch time:
-            rtc.setAlarmTime(launch[0], launch[1], launch[2]);
+            rtc.setAlarmEpoch(SECRET_LAUNCHTIME);
             rtc.enableAlarm(rtc.MATCH_HHMMSS);
             // attach the function to run at launch:
             rtc.attachInterrupt(startMachine);
@@ -188,6 +205,7 @@ void loop() {
       client.println("\n\n"); // send an HTTP response
       client.print("Thanks. time at our end: "); // send an HTTP response
       client.println(getTimeStamp()); // send an HTTP response
+      client.println("Status: " + statusMessage);
 
       // wait a little before disconnecting them:
       delay(10);                       // give the server time to get the data
@@ -221,7 +239,6 @@ void connectToNetwork() {
 
   // increment the reconnect count:
   reconnects++;
-
 }
 
 // format the time as hh:mm:ss
@@ -259,40 +276,36 @@ String getDateStamp() {
 // gets a good hit to when the machine is supposed to start:
 
 String timeLeft() {
-  // calculate time left
-  // if  hours are less than launch time:
-  if (rtc.getHours() <= launch[0]) {
-    countDown[0] = launch[0] - rtc.getHours();
-  }
-  // if  minutes are less than launch time:
-  if (rtc.getMinutes() <= launch[1]) {
-    countDown[1] = launch[1] - rtc.getMinutes();
-  } else {
-    countDown[1] = abs(launch[1] - (60 - rtc.getMinutes()));
-  }
-  // if  seconds are less than launch time:
-  if (rtc.getSeconds() <= launch[2]) {
-    countDown[2] = launch[2] - rtc.getSeconds();
-  } else {
-    countDown[2] = abs(launch[2] - (60 - rtc.getSeconds()));
-  }
-  // make a string with the countdown time:
   String result = "";
-  for (int i = 0; i < 3; i++) {
-    result += String(countDown[i]);
-    if (countDown[i] < 10) result += "0";
-    if (i < 2) result += ":";
+  // get the diff between the SECRET_LAUNCHTIME as an epoch
+  // and the current time as an epoch:
+  long remaining = SECRET_LAUNCHTIME - rtc.getEpoch();
+  if ( remaining < 0) {
+    startMachine();
+    systemStatus = RUBE_RUNNING;
   }
+  // separate out days, hours, minutes, seconds:
+  int days = remaining / 60 / 60 / 24;
+  int hours = remaining / 60 / 60 % 24;
+  int minutes = remaining / 60 % 60;
+  int seconds = remaining % 60;
+  // assemble a string:
+  result += String(days) + ":";
+  if (hours <= 9) result += "0";
+  result += String(hours) + ":";
+  if (minutes <= 9) result += "0";
+  result += String(minutes)  + ":";
+  if (seconds <= 9) result += "0";
+  result += String(seconds);
+  // return it:
   return result;
 }
-
 
 // this function runs when the machine is supposed to start:
 void startMachine() {
   Serial.println("Go Rube! Go Rube! It's your birthday!");
-  counting = false;
-  // begin banana movement:
-  bananaMoving = true;
+  systemStatus = RUBE_RUNNING;
+  bananaAngle = 0;
 }
 
 // write a string to the OLED display:
