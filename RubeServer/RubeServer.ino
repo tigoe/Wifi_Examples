@@ -30,6 +30,7 @@
 #include <SD.h>
 #include "arduino_secrets.h"
 #include <RTCZero.h>
+#include <Servo.h>
 
 // for the OLED display:
 #include <Wire.h>
@@ -63,7 +64,15 @@ bool displayAvailable = false;    // display working?
 volatile bool logWritten = false;// log entry written?
 
 
+const int bananaPin = 0;        // pin number for the banana servo
+int bananaAngle = 0;            // banana starting angle
+int bananaMoving = false;       // banana state
+Servo bananaServo;              // servo instance for banana
+
 void setup() {
+  // initialize banana servo:
+  bananaServo.attach(bananaPin);
+
   pinMode(LED_BUILTIN, OUTPUT);
   Serial.begin(9600);// initialize serial communications
 
@@ -101,6 +110,22 @@ void setup() {
 }
 
 void loop() {
+
+  // update the servo no matter what:
+  if (millis() - lastServoMove < 20) {
+    // if the banana should be moving, adjust the angle:
+    if (bananaMoving) {
+      // constrain banana angle to 0-180:
+      bananaAngle = constrain(bananaAngle++, 0, 180);
+      if (bananaAngle == 180) {
+        // when you reach the end, stop the banana:
+        bananaMoving = false;
+      }
+    }
+    // write to the servo:
+    bananaServo.write(bananaAngle);
+  }
+
   // if you are counting down, display countdown:
   if (counting) {
     if (rtc.getSeconds() != lastSecond) {
@@ -129,7 +154,7 @@ void loop() {
       Serial.print("client address: ");
       Serial.println(client.remoteIP());
 
-     // Log client address to the data file:
+      // Log client address to the data file:
       File dataFile = SD.open(logFile, FILE_WRITE);
       // write a header to the file:
       if (dataFile) {
@@ -140,7 +165,7 @@ void loop() {
         dataFile.println(client.remoteIP());
         dataFile.close();
       }
-       
+
       // if it's the right kind of request and the right body:
       if (client.find(SECRET_PATH)) {
         if (client.find(SECRET_BODY)) {
@@ -266,6 +291,8 @@ String timeLeft() {
 void startMachine() {
   Serial.println("Go Rube! Go Rube! It's your birthday!");
   counting = false;
+  // begin banana movement:
+  bananaMoving = true;
 }
 
 // write a string to the OLED display:
