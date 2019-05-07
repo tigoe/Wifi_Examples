@@ -5,12 +5,13 @@
   Writes to an SD card whenever device disconnects, and once a minute
 
   created 9 April 2019
+  modified 2 May 2019
   by Tom Igoe
 */
 
 #include <SPI.h>
-//#include <WiFi101.h>
-#include <WiFiNINA.h>
+#include <WiFi101.h>
+//#include <WiFiNINA.h>
 #include <RTCZero.h>
 #include <SD.h>
 
@@ -32,7 +33,7 @@ String statusLabel[] = {
 // number of times the device has reconnected
 int reconnects = 0;
 // log file to write to on the SD card:
-String logFile = "DATALOG.TXT";
+String logFile = "DATALOG.CSV";
 // whether the SD card is accessible
 bool SDAvailable = false;
 // Whether it's time to write to the SD card:
@@ -43,30 +44,38 @@ void setup() {
   Serial.begin(9600);
   pinMode(LED_BUILTIN, OUTPUT);
 
+  // start realtime clock:
+  rtc.begin();
+  setDateFromCompile();
+  setTimeFromCompile();
+
   // initialize SD card:
   SDAvailable = SD.begin(SD_CHIP_SELECT);
   // print to serial port to check if card is working:
   Serial.println("Card present: " + String(SDAvailable));
-Serial.println(getMacAddress());
+  Serial.println(getMacAddress(1));
   // if card is working, print to it. otherwise, print to serial:
   if (SDAvailable) {
     File dataFile = SD.open(logFile, FILE_WRITE);
+    dataFile.println("Start date: " + getDateStamp());
+    dataFile.println("Start time: " + getTimeStamp());
     dataFile.print("WiFi firmware version: ");
     dataFile.println(WiFi.firmwareVersion());
     dataFile.println(getColumnHeaders());
     dataFile.close();
   } else {
+    Serial.println("Start date: " + getDateStamp());
+    Serial.println("Start time: " + getTimeStamp());
     Serial.print("WiFi firmware version: ");
     Serial.println(WiFi.firmwareVersion());
     Serial.println(getColumnHeaders());
   }
-  // start realtime clock:
-  rtc.begin();
+
   // connect:
   connectToNetwork();
-  // set alarm for one-minute updates:
+  // set alarm for one-hour updates:
   rtc.setAlarmTime(0, 0, 0);
-  rtc.enableAlarm(rtc.MATCH_SS);
+  rtc.enableAlarm(rtc.MATCH_MMSS);
   rtc.attachInterrupt(timedLog);
 }
 
@@ -74,62 +83,72 @@ void loop() {
   // if not connected, attempt to connect:
   if (WiFi.status() != WL_CONNECTED) {
     digitalWrite(LED_BUILTIN, LOW);
+    logData();
     connectToNetwork();
   }
 
   // if update flag is set, log:
   if (updateNeeded) {
-    // if SD card is reachable, write to it:
-    if (SDAvailable) {
-      // open SD card file:
-      File dataFile = SD.open(logFile, FILE_WRITE);
-      dataFile.print(getDateStamp() + ",");
-      dataFile.print(getTimeStamp() + "\t");
-      dataFile.print(getMacAddress() + "\t");
-      dataFile.print(WiFi.SSID());
-      dataFile.print("\t");
-      dataFile.print(WiFi.localIP());
-      dataFile.print("\t");
-      dataFile.print(WiFi.RSSI());
-      dataFile.print("dBm\t");
-      dataFile.print(statusLabel[WiFi.status()] + "\t");
-      dataFile.print(reconnects);
-      dataFile.print("\t");
-      dataFile.println(getUptime(0));
-      // close SD card file:
-      dataFile.close();
-    } else {
-      Serial.print(getDateStamp() + ",");
-      Serial.print(getTimeStamp() + "\t");
-      Serial.print(getMacAddress() + "\t");
-      Serial.print(WiFi.SSID());
-      Serial.print("\t");
-      Serial.print(WiFi.localIP());
-      Serial.print("\t");
-      Serial.print(WiFi.RSSI());
-      Serial.print("dBm\t");
-      Serial.print(statusLabel[WiFi.status()] + "\t");
-      Serial.print(reconnects);
-      Serial.print("\t");
-      Serial.println(getUptime(0));
-    }
-    // clear update flag:
-    updateNeeded = false;
+    logData();
   }
 }
 
-// this is the RTC interrupt service routine. 
+// this is the RTC interrupt service routine.
 // it's called once a minute:
 void timedLog() {
   updateNeeded = true;
 }
 
+void logData() {
+  // if SD card is reachable, write to it:
+  if (SDAvailable) {
+    // open SD card file:
+    File dataFile = SD.open(logFile, FILE_WRITE);
+    dataFile.print(getDateStamp() + ",");
+    dataFile.print(getTimeStamp() + ",");
+    dataFile.print(getMacAddress(1) + ",");
+    dataFile.print(WiFi.SSID());
+    dataFile.print(",");
+    dataFile.print(getMacAddress(0) + "," );
+    dataFile.print(WiFi.localIP());
+    dataFile.print(",");
+    dataFile.print(WiFi.RSSI());
+    dataFile.print("dBm,");
+    dataFile.print(statusLabel[WiFi.status()] + ",");
+    dataFile.print(reconnects);
+    dataFile.print(",");
+    dataFile.println(getUptime(0));
+    // close SD card file:
+    dataFile.close();
+  } else {
+    Serial.print(getDateStamp() + ",");
+    Serial.print(getTimeStamp() + ",");
+    Serial.print(getMacAddress(1) + ",");
+    Serial.print(WiFi.SSID());
+    Serial.print(",");
+    Serial.print(getMacAddress(0) + "," );
+    Serial.print(WiFi.localIP());
+    Serial.print(",");
+    Serial.print(WiFi.RSSI());
+    Serial.print("dBm,");
+    Serial.print(statusLabel[WiFi.status()] + ",");
+    Serial.print(reconnects);
+    Serial.print(",");
+    Serial.println(getUptime(0));
+  }
+  // clear update flag:
+  updateNeeded = false;
+}
+
 // format MAC address:
-String getMacAddress() {
+String getMacAddress(int which) {
   String result = "";
   byte mac[6];
-  WiFi.macAddress(mac);
-
+  if (which == 1 ) {       // get MAC address of this device
+    WiFi.macAddress(mac);
+  } else if (which == 0) {  // get MAC address of router
+    WiFi.BSSID(mac);
+  }
   for (int b = 5; b >= 0; b--) {
     if (mac[b] < 16) {
       result += "0";
@@ -210,47 +229,92 @@ String getTimeStamp() {
 
 void connectToNetwork() {
   // try to connect to the network:
+
   while ( WiFi.status() != WL_CONNECTED) {
     //Connect to WPA / WPA2 network:
     WiFi.begin(SECRET_SSID, SECRET_PASS);
     delay(2000);
+    // increment the reconnect attempts:
+    reconnects++;
   }
+
   // You're connected, turn on the LED:
   digitalWrite(LED_BUILTIN, HIGH);
-  
+
   // set the time from the network:
+  int attempts = 0;
   unsigned long epoch;
   do {
     epoch = WiFi.getTime();
     delay(1000);
-  } while (epoch == 0);
+    attempts++;
+  } while (attempts < 5);
 
   rtc.setEpoch(epoch);
-  
+
   //set the startTime as the connect time of the server:
   startTime = rtc.getEpoch();
-  // increment the reconnect count:
-  reconnects++;
+
   //  set the update flag:
   updateNeeded = true;
 }
 
 // return column headers for printing:
 String getColumnHeaders() {
-  String result = "DateTime: ";
-  result += "\t";
-  result += "MAC address: ";
-  result += "\t";
-  result += "SSID: ";
-  result += "\t";
-  result += "IP Address: ";
-  result += "\t";
-  result += "signal strength (RSSI): ";
-  result += "\t";
-  result += "status: ";
-  result += "\t";
-  result += "reconnects: ";
-  result += "\t";
-  result += "uptime: ";
+  String result = "Date:,Time:,";
+  result += "MAC address:,";
+  result += "SSID:,";
+  result += "BSSID:,";
+  result += "IP Address:,";
+  result += "signal strength (RSSI):,";
+  result += "status:,";
+  result += "reconnects:,";
+  result += "uptime:";
   return result;
+}
+
+
+// set the rtc time from the compile time:
+void setTimeFromCompile() {
+  // get the compile time string:
+  String compileTime = String(__TIME__);
+
+  // break the compile time on the colons:
+  int h = compileTime.substring(0, 2).toInt();
+  int m = compileTime.substring(3, 5).toInt();
+  int s = compileTime.substring(6, 8).toInt();
+
+  // set the time from the derived numbers:
+  rtc.setTime(h, m, s);
+}
+
+// set the rtc time from the compile date:
+void setDateFromCompile() {
+  String months[] = {
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  };
+  // get the compile date:
+  String compileDate = String(__DATE__);
+
+  // get the date substring
+  String monthStr = compileDate.substring(0, 3);
+
+  int m = 0;    // variable for the date as an integer
+  // see which month matches the month string:
+  for (int i = 0; i < 12; i++) {
+    if (monthStr == months[i]) {
+      // the first month is 1, but its array position is 0, so:
+      m = i + 1;
+      // no need to continue the rest of the for loop:
+      break;
+    }
+  }
+
+  // get the day and year as substrings, and convert to numbers:
+  int d = compileDate.substring(4, 6).toInt();
+  int y = compileDate.substring(9, 11).toInt();
+  
+  // set the date from the derived numbers:
+  rtc.setDate(d, m, y);
 }
