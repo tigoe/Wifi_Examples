@@ -207,6 +207,7 @@ String getDateStamp() {
   if (rtc.getMonth() <= 9) dateStamp += "0";
   dateStamp += rtc.getMonth();
   dateStamp += "-20";
+  if (rtc.getYear() <= 9) dateStamp += "0";
   dateStamp += rtc.getYear();
   return dateStamp;
 }
@@ -314,7 +315,7 @@ void setDateFromCompile() {
   // get the day and year as substrings, and convert to numbers:
   int d = compileDate.substring(4, 6).toInt();
   int y = compileDate.substring(9, 11).toInt();
-  
+
   // set the date from the derived numbers:
   rtc.setDate(d, m, y);
 }
