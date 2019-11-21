@@ -3,7 +3,8 @@
   Works with the MKR1010 and Nano 33 IoT
   Uses the OSC library by Adrian Freed and Yotam Man
   https://github.com/CNMAT/OSC
-
+  Add a new file called arduino_secrets.h to this sketch 
+  for your SECRET SSID (network name) and SECRET_PASS (password)
 
   created 21 Nov 2019
   by Tom Igoe
