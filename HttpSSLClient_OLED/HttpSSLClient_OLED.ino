@@ -15,7 +15,7 @@
 //#include <WiFi101.h>          // use this  for MKR1000/WINC1500 modules
 //#include <ESP8266WiFi.h>      // use this for ESP8266 modules
 #include <ArduinoHttpClient.h>
-#include "arduino_secrets.h"
+#include "arduino_secrets.h"    // tab for the SSID and password
 
 #include <Wire.h>
 #include <Adafruit_SSD1306.h>
