@@ -16,10 +16,10 @@
 #include "arduino_secrets.h"
 
 WiFiUDP Udp;                 // instance of UDP library
-const int remotePort = 7500; // port to which you want to send
+const int remotePort = 8000; // port to which you want to send
 
 //fill in the IP address you want to send to:
-char remoteAddress[] = "192.168.43.126";
+char remoteAddress[] = "192.168.1.18";
 
 void setup() {
     Serial.begin(9600);
@@ -44,7 +44,7 @@ void loop() {
     //the message wants an OSC address as first argument
     OSCMessage msg("/analog/0");
     msg.add((int32_t)analogRead(0));
-    msg.send(Serial);
+    //msg.send(Serial);
     Udp.beginPacket(remoteAddress, remotePort);
     msg.send(Udp); // send the bytes to the SLIP stream
     Udp.endPacket(); // mark the end of the OSC Packet
