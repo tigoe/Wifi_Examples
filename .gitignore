@@ -5,3 +5,7 @@ ConnDevClient/arduino_secrets.h
 *keys.txt
 ConnectedDevices/ips-2019.txt
 ConnectedDevices/sql_queries.txt
+*.bin
+*.elf
+*.hex
+*.map
