@@ -1,19 +1,13 @@
 /*
-  Dweet.io GET client for ArduinoHttpClient library
-  Connects to dweet.io once every ten seconds,
-  sends a GET request and a request body. Uses SSL
+   GET client for ArduinoHttpClient library
+  Connects to a server once every ten seconds,
+  sends a GET request and parses the resulting JSON resposne. 
+  Uses SSL.
 
-  Shows how to use Strings to assemble path and parse content
-  from response. dweet.io expects:
-  https://dweet.io/get/latest/dweet/for/thingName
-
-  For more on dweet.io, see https://dweet.io/play/
 
   created 15 Feb 2016
-  updated 22 Jan 2019
+  updated 26 Oct 2020
   by Tom Igoe
-
-  this example is in the public domain
 */
 #include <ArduinoHttpClient.h>
 #include <WiFiNINA.h>
@@ -25,10 +19,10 @@
 char ssid[] = SECRET_SSID;
 char pass[] = SECRET_PASS;
 
-const char serverAddress[] = "192.168.0.100";  // server address
-int port = 8080;
+const char serverAddress[] = "arduino-to-json.glitch.me";  // server address
+int port = 443;
 
-WiFiClient wifi;
+WiFiSSLClient wifi;
 HttpClient client = HttpClient(wifi, serverAddress, port);
 int status = WL_IDLE_STATUS;
 
@@ -55,7 +49,7 @@ void setup() {
 
 void loop() {
   // assemble the path for the GET message:
-  String path = "/temperature/";
+  String path = "/data/";
 
   // send the GET request
   Serial.println("making GET request");
