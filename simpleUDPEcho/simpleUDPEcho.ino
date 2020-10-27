@@ -18,8 +18,7 @@ void setup()
 {
   Serial.begin(9600);
   // while you're not connected to a WiFi AP,
-  while (WiFi.status() != WL_CONNECTED)
-  {
+  while (WiFi.status() != WL_CONNECTED) {
     Serial.print("Attempting to connect to Network named: ");
     Serial.println(SECRET_SSID);          // print the network name (SSID)
     WiFi.begin(SECRET_SSID, SECRET_PASS); // try to connect
