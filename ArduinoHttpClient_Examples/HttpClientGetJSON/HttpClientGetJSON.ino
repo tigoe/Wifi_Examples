@@ -1,23 +1,20 @@
 /*
    GET client for ArduinoHttpClient library
   Connects to a server once every ten seconds,
-  sends a GET request and parses the resulting JSON resposne. 
-  Uses SSL.
-
+  sends a GET request and parses the resulting JSON response.
+  Uses SSL and the following libraries:
+  http://librarymanager/All#ArduinoHttpClient
+  http://librarymanager/All#WiFiNINA
+  http://librarymanager/All#Arduino_JSON
 
   created 15 Feb 2016
-  updated 26 Oct 2020
+  updated 11 Jan 2021
   by Tom Igoe
 */
 #include <ArduinoHttpClient.h>
 #include <WiFiNINA.h>
 #include <Arduino_JSON.h>
-
 #include "arduino_secrets.h"
-///////please enter your sensitive data in the Secret tab/arduino_secrets.h
-/////// Wifi Settings ///////
-char ssid[] = SECRET_SSID;
-char pass[] = SECRET_PASS;
 
 const char serverAddress[] = "arduino-to-json.glitch.me";  // server address
 int port = 443;
@@ -31,10 +28,10 @@ void setup() {
   while (!Serial);
   while ( status != WL_CONNECTED) {
     Serial.print("Attempting to connect to Network named: ");
-    Serial.println(ssid);     // print the network name (SSID);
+    Serial.println(SECRET_SSID);     // print the network name (SSID);
 
     // Connect to WPA/WPA2 network:
-    status = WiFi.begin(ssid, pass);
+    status = WiFi.begin(SECRET_SSID, SECRET_PASS);
   }
 
   // print the SSID of the network you're attached to:
@@ -65,7 +62,7 @@ void loop() {
 
   // parse the string into a JSONVar object:
   JSONVar myObject = JSON.parse(response);
- 
+
   // if you know the object's keys, you can ask for their values:
   Serial.print("temperature:\t");
   Serial.println(myObject["temperature"]);

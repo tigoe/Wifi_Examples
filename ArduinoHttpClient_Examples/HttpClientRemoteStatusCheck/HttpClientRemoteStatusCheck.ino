@@ -1,24 +1,30 @@
 /*
-  HTTP POST client for ArduinoHttpClient library with network
+  HTTP POST client for ArduinoHttpClient library with remote
   status check
   Connects to a server once every ten seconds,
   sends a POST request and a request body.
 
   Responds to UDP requests on port 43770 with
-  the last request time and requext count, so you can check status.
+  the last request time and request count, so you can check status.
 
   To send a UDP message from the command line :
   $ echo "status" | nc -uc yourAddress 43770 -w3
 
   note: WiFi SSID and password are stored in arduino_secrets.h file.
+  Uses the following libraries:
+  http://librarymanager/All#ArduinoHttpClient
+  http://librarymanager/All#WiFi101   // use this for MKR1000
+  http://librarymanager/All#WiFiNINA    // use this for MKR1010 or Nano 33 IoT
+  http://librarymanager/All#WiFiUdp
+  http://librarymanager/All#RTCZero
 
   created 24 Feb 2018
-  modified 27 Feb 2018
+  modified 11 Jan 2021
   by Tom Igoe
 */
 #include <ArduinoHttpClient.h>
-//#include <WiFi101.h>
-#include <WiFiNINA.h>
+//#include <WiFi101.h>    // use this for MKR1000
+#include <WiFiNINA.h>     // use this for MKR1010 or Nano 33 IoT
 #include <WiFiUdp.h>
 #include <RTCZero.h>
 #include "arduino_secrets.h"
@@ -38,6 +44,7 @@ int wiFiStatus = WL_IDLE_STATUS;  // WiFi status
 // HTTP client instance:
 HttpClient http = HttpClient(wifi, serverAddress, port);
 bool requesting = false;
+
 void setup() {
   Serial.begin(9600);
   pinMode(LED_BUILTIN, OUTPUT);
@@ -58,6 +65,7 @@ void setup() {
   IPAddress ip = WiFi.localIP();
   Serial.print("IP Address: ");
   Serial.println(ip);
+  // set up a UDB server to listen for status requests:
   Serial.print("Listening for UDP on port ");
   Serial.println(udpPort);
   Udp.begin(udpPort);
@@ -80,7 +88,8 @@ void setup() {
     rtc.setTime(0, 0, 0); // fill in your hour, minute, second
     rtc.setDate(0, 0, 0); // fill in your day, month, year
   }
-
+  
+  //set an alarm for when to make a request:
   rtc.setAlarmSeconds(00);          // set an alarm for processor wakeup
   rtc.enableAlarm(rtc.MATCH_SS);    // enable it for once a minute
   rtc.attachInterrupt(requestCheck); // have the request happen on the alarm

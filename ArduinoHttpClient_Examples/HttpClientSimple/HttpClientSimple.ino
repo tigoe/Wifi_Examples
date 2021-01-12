@@ -1,15 +1,15 @@
 /*
   Test HTTP Client
-  Context: Arduino, with WINC1500 module or uBlox NINA module
-
+  Uses the following libraries:
+  http://librarymanager/All#ArduinoHttpClient
+  http://librarymanager/All#WiFiNINA
+ 
 */
 // include required libraries and config files
-#include <SPI.h>
-//#include <WiFi101.h>        // use this for MKR1000 boards
-//#include <ESP8266WiFi.h>  // use this instead of WiFi101 for ESP8266 modules
+//#include <WiFi101.h>      // use this for MKR1000 boards
 #include <WiFiNINA.h>       // use this for MKR1010 and Nano 33 IoT boards
-#include "arduino_secrets.h"
 #include <ArduinoHttpClient.h>
+#include "arduino_secrets.h"
 
 
 WiFiClient netSocket;               // network socket to server
@@ -47,5 +47,5 @@ void loop() {
   }
   //  // when there's nothing left to the response,
   http.stop();                     // close the request
-  delay(5000);                    // wait 10 seconds
+  delay(10000);                    // wait 10 seconds
 }

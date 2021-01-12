@@ -1,24 +1,30 @@
 
 /*
-  Connection time logger
+  WiFi Connection time logger
   Logs how long a device has been connected to the network
   Writes to an SD card whenever device disconnects, and once a minute
+    Uses the following libraries:
+  http://librarymanager/All#WiFiNINA
+  or
+  http://librarymanager/All#WiFi101
+  http://librarymanager/All#RTCZero
+  http://librarymanager/All#SD
 
   created 9 April 2019
-  modified 2 May 2019
+  modified 11 Jan 2021
   by Tom Igoe
 */
 
-#include <SPI.h>
-#include <WiFi101.h>
-//#include <WiFiNINA.h>
+#include <WiFiNINA.h>   // use this for MKR1010 or Nano 33 IoT
+//#include <WiFi101.h>  // use this for MKR1000
 #include <RTCZero.h>
 #include <SD.h>
-
 #include "arduino_secrets.h"
 
+// chip select pin for the SD card reader:
 #define SD_CHIP_SELECT 4
 
+// realtime clock variables:
 RTCZero rtc;
 unsigned long startTime;
 
@@ -43,32 +49,33 @@ void setup() {
   // initialize serial and builtin LED:
   Serial.begin(9600);
   pinMode(LED_BUILTIN, OUTPUT);
-
+  // if serial monitor is closed, wait 3 sec:
+  if (!Serial) delay(3000);
   // start realtime clock:
   rtc.begin();
-  setDateFromCompile();
-  setTimeFromCompile();
 
   // initialize SD card:
-  SDAvailable = SD.begin(SD_CHIP_SELECT);
+  //  SDAvailable = SD.begin(SD_CHIP_SELECT);
   // print to serial port to check if card is working:
-  Serial.println("Card present: " + String(SDAvailable));
-  Serial.println(getMacAddress(1));
+  if (Serial) Serial.println("Card present: " + String(SDAvailable));
+  if (Serial) Serial.println(getMacAddress(1));
+
   // if card is working, print to it. otherwise, print to serial:
+  String header = "Start date: ";
+  header += getDateStamp();
+  header += "\nStart time: ";
+  header += getTimeStamp();
+  header += "\nWiFi firmware version: ";
+  header += String(WiFi.firmwareVersion());
+  header += "\n";
+  header += getColumnHeaders();
+
   if (SDAvailable) {
     File dataFile = SD.open(logFile, FILE_WRITE);
-    dataFile.println("Start date: " + getDateStamp());
-    dataFile.println("Start time: " + getTimeStamp());
-    dataFile.print("WiFi firmware version: ");
-    dataFile.println(WiFi.firmwareVersion());
-    dataFile.println(getColumnHeaders());
+    dataFile.println(header);
     dataFile.close();
   } else {
-    Serial.println("Start date: " + getDateStamp());
-    Serial.println("Start time: " + getTimeStamp());
-    Serial.print("WiFi firmware version: ");
-    Serial.println(WiFi.firmwareVersion());
-    Serial.println(getColumnHeaders());
+    if (Serial) Serial.println(header);
   }
 
   // connect:
@@ -100,41 +107,40 @@ void timedLog() {
 }
 
 void logData() {
+  String logEntry = getDateStamp();
+  logEntry += ",";
+  logEntry += getTimeStamp();
+  logEntry += ",";
+  logEntry += getMacAddress(1);
+  logEntry += ",";
+  logEntry += WiFi.SSID();
+  logEntry += ",";
+  logEntry += getMacAddress(0);
+  logEntry += ",";
+  // IP address is a single unsigned int. Separate it into bytes:
+  unsigned int ipAddr = WiFi.localIP();
+  while  (ipAddr > 0) {
+    logEntry += (ipAddr % 256);
+    ipAddr /= 256;
+    if (ipAddr > 0)  logEntry += ".";
+  }
+  logEntry += ",";
+  logEntry += WiFi.RSSI();
+  logEntry += "dBm,";
+  logEntry += statusLabel[WiFi.status()];
+  logEntry += ",";
+  logEntry += reconnects;
+  logEntry += ",";
+  logEntry += getUptime(0);
   // if SD card is reachable, write to it:
   if (SDAvailable) {
     // open SD card file:
     File dataFile = SD.open(logFile, FILE_WRITE);
-    dataFile.print(getDateStamp() + ",");
-    dataFile.print(getTimeStamp() + ",");
-    dataFile.print(getMacAddress(1) + ",");
-    dataFile.print(WiFi.SSID());
-    dataFile.print(",");
-    dataFile.print(getMacAddress(0) + "," );
-    dataFile.print(WiFi.localIP());
-    dataFile.print(",");
-    dataFile.print(WiFi.RSSI());
-    dataFile.print("dBm,");
-    dataFile.print(statusLabel[WiFi.status()] + ",");
-    dataFile.print(reconnects);
-    dataFile.print(",");
-    dataFile.println(getUptime(0));
+    dataFile.println(logEntry);
     // close SD card file:
     dataFile.close();
   } else {
-    Serial.print(getDateStamp() + ",");
-    Serial.print(getTimeStamp() + ",");
-    Serial.print(getMacAddress(1) + ",");
-    Serial.print(WiFi.SSID());
-    Serial.print(",");
-    Serial.print(getMacAddress(0) + "," );
-    Serial.print(WiFi.localIP());
-    Serial.print(",");
-    Serial.print(WiFi.RSSI());
-    Serial.print("dBm,");
-    Serial.print(statusLabel[WiFi.status()] + ",");
-    Serial.print(reconnects);
-    Serial.print(",");
-    Serial.println(getUptime(0));
+    if (Serial) Serial.println(logEntry);
   }
   // clear update flag:
   updateNeeded = false;
@@ -272,50 +278,4 @@ String getColumnHeaders() {
   result += "reconnects:,";
   result += "uptime:";
   return result;
-}
-
-
-// set the rtc time from the compile time:
-void setTimeFromCompile() {
-  // get the compile time string:
-  String compileTime = String(__TIME__);
-
-  // break the compile time on the colons:
-  int h = compileTime.substring(0, 2).toInt();
-  int m = compileTime.substring(3, 5).toInt();
-  int s = compileTime.substring(6, 8).toInt();
-
-  // set the time from the derived numbers:
-  rtc.setTime(h, m, s);
-}
-
-// set the rtc time from the compile date:
-void setDateFromCompile() {
-  String months[] = {
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-  };
-  // get the compile date:
-  String compileDate = String(__DATE__);
-
-  // get the date substring
-  String monthStr = compileDate.substring(0, 3);
-
-  int m = 0;    // variable for the date as an integer
-  // see which month matches the month string:
-  for (int i = 0; i < 12; i++) {
-    if (monthStr == months[i]) {
-      // the first month is 1, but its array position is 0, so:
-      m = i + 1;
-      // no need to continue the rest of the for loop:
-      break;
-    }
-  }
-
-  // get the day and year as substrings, and convert to numbers:
-  int d = compileDate.substring(4, 6).toInt();
-  int y = compileDate.substring(9, 11).toInt();
-
-  // set the date from the derived numbers:
-  rtc.setDate(d, m, y);
 }

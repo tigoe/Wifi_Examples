@@ -3,22 +3,24 @@
   Based on the Test HTTP Client from Making Things Talk, 3rd ed.
 
   makes an HTTPS call and displays the result on an SSD1306 OLED
+  Uses the following libraries:
+  http://librarymanager/All#WiFiNINA
+  http://librarymanager/All#ArduinoHttpClient
+  http://librarymanager/All#Adafruit_SSD1306
 
   created 12 Feb 2018
-  modified 10 Feb 2020
+  modified 11 Jan 2021
   by Tom Igoe
 */
 
 // include required libraries and config files
-#include <SPI.h>
 #include <WiFiNINA.h>           // use this  for MKR1010/Nano 33 IoT modules
 //#include <WiFi101.h>          // use this  for MKR1000/WINC1500 modules
 //#include <ESP8266WiFi.h>      // use this for ESP8266 modules
 #include <ArduinoHttpClient.h>
+#include <Adafruit_SSD1306.h>
 #include "arduino_secrets.h"    // tab for the SSID and password
 
-#include <Wire.h>
-#include <Adafruit_SSD1306.h>
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
 #define OLED_RESET    0  // Reset pin for display (0 or -1 if no reset pin)
@@ -63,14 +65,14 @@ void setup() {
 void loop() {
   HttpClient http(netSocket, server, portNumber); // make an HTTP client
   http.get(route);                                // make a GET request
- 
+
   // update display:
   display.clearDisplay();
   display.setCursor(0, 0);
   display.print("requesting ");
   display.print(route);
   display.display();
-  
+
   while (http.connected()) {              // while connected to the server,
     if (http.available()) {               // if there is a response from the server,
       String result = http.readString();  // read it

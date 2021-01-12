@@ -4,15 +4,19 @@
 
   tests the signal strength on a given network. Prints out the RSSI and
   BSSID (aka MAC address) of each WiFi Access Point to which the device connects.
+ Uses the following libraries:
+  http://librarymanager/All#WiFiNINA
+  or
+  http://librarymanager/All#WiFi101
 
   created 8 Jan 2020
-  updated 11 Feb 2020
+  updated 11 Jan 2021
   by Tom Igoe
 */
 
-#include <SPI.h>
-//#include <WiFi101.h>
-#include <WiFiNINA.h>
+
+#include <WiFiNINA.h>   // use this for MKR1010 or Nano 33 IoT
+//#include <WiFi101.h>  // use this for MKR1000
 
 #include "arduino_secrets.h"
 
@@ -103,7 +107,6 @@ String getMacAddress(int which) {
 
 void connectToNetwork() {
   // try to connect to the network:
-
   while ( WiFi.status() != WL_CONNECTED) {
     //Connect to WPA / WPA2 network:
     WiFi.begin(SECRET_SSID, SECRET_PASS);

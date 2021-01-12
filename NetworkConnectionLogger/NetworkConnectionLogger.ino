@@ -3,20 +3,26 @@
 
   Listens for clients on popular web ports and logs their IP
   addresses to an SD file, along with the time and date
+  Uses the following libraries:
+  http://librarymanager/All#WiFiNINA
+  http://librarymanager/All#ArduinoHttpClient
+  http://librarymanager/All#RTCZero
+  http://librarymanager/All#SD
 
   created 18 April 2019
+  modified 11 Jan 2021
   by Tom Igoe
 */
-#include <SPI.h>
-#include <WiFi101.h>
-//#include <WiFiNINA.h>
+
+//#include <WiFi101.h>    // use this for the MKR1000
+#include <WiFiNINA.h>     // use this for the MKR1010 and Nano 33 IoT
 #include <SD.h>
 #include <RTCZero.h>
 #include "arduino_secrets.h"
 
 // The chip select pin.
 // For MKRZero it's SDCARD_SS_PIN
-// for mem shield, it's 4
+// for MKR mem shield, it's 4.
 const int  SD_CHIP_SELECT = 4;
 
 // whether or not the SD card initialized:
@@ -29,31 +35,36 @@ unsigned long startTime;
 
 // number of times the device has reconnected
 int reconnects = 0;
-
-WiFiServer http(80);
-WiFiServer https(443);
-WiFiServer httpAlt(8080);
-WiFiServer ssh(22);
-WiFiServer smtp(25);
-WiFiServer smtps(587);
+// the ports to listen on:
+WiFiServer http(80);      // HTTP
+WiFiServer https(443);    // HTTPS
+WiFiServer httpAlt(8080); // an alternate development port for HTTP
+WiFiServer ssh(22);        // SSH
+WiFiServer smtp(25);      // SMTP
+WiFiServer smtps(587);    // SMTPS
 
 void setup() {
   Serial.begin(9600);
-  //  while (!Serial);
+  // wait 5 seconds if serial monitor is not open:
+  if (!Serial) delay(3000);
+  // use the builtin LED to tell when a connection attempt happens:
   pinMode(LED_BUILTIN, OUTPUT);
   // initialize the realtime clock:
   rtc.begin();
 
   SDAvailable = SD.begin(SD_CHIP_SELECT);
-  Serial.println("Card working: " + String(SDAvailable));
-  // print a header to the SD card file:
+  // send serial only when serial monitor is open:
+  if (Serial) Serial.println("Card working: " + String(SDAvailable));
+  // open the log file on the SD Card:
   File dataFile = SD.open(logFile, FILE_WRITE);
+  // print a header to the SD card file:
   if (dataFile) {
     dataFile.print("WiFi firmware version: ");
     dataFile.println(WiFi.firmwareVersion());
     dataFile.close();
   }
 
+  // connect to network and start listening on ports:
   connectToNetwork();
   http.begin();
   https.begin();
@@ -64,6 +75,7 @@ void setup() {
 }
 
 void loop() {
+  // listen for incoming connections:
   getClient(http, 80);
   getClient(https, 443);
   getClient(httpAlt, 8080);
@@ -75,36 +87,34 @@ void loop() {
 void getClient(WiFiServer server, int myPort) {
   WiFiClient client = server.available();   // listen for incoming clients
   if (client) {                             // if you get a client,
-    digitalWrite(LED_BUILTIN, HIGH);
+    digitalWrite(LED_BUILTIN, HIGH);        // turn on LED
+
+    // read incoming message from client:
     String message = client.readString();
+    // make a log entry with it:
+    String logEntry = getDateStamp();
+    logEntry += ",";
+    logEntry += getTimeStamp();
+    logEntry += "\nincoming port: ";
+    logEntry += String(myPort);
+    logEntry += "ipAddr: ";
+    logEntry += client.remoteIP();
+    logEntry += ":";
+    logEntry += client.remotePort();
+    logEntry += "\nmessage: ";
+    logEntry += message;
+
+    // write the message to an SD card:
     if (SDAvailable) {
       File dataFile = SD.open(logFile, FILE_WRITE);
       if (dataFile) {
-        dataFile.print(getDateStamp());
-        dataFile.print(",");
-        dataFile.println(getTimeStamp());
-        dataFile.println("incoming port: " + String(myPort));
-        dataFile.print("ipAddr: ");
-        dataFile.print(client.remoteIP());
-        dataFile.print(":");
-        dataFile.println(client.remotePort());
-        dataFile.print("message: ");
-        dataFile.println(message);
-        dataFile.println();
+        dataFile.println(logEntry);
         dataFile.close();
       }
+      // if SD card is not available but Serial Monitor
+      // is, write to it instead:
     } else {
-      Serial.print(getDateStamp());
-      Serial.print(",");
-      Serial.println(getTimeStamp());
-      Serial.println("incoming port: " + String(myPort));
-      Serial.print("ipAddr: ");
-      Serial.print(client.remoteIP());
-      Serial.print(":");
-      Serial.println(client.remotePort());
-      Serial.print("message: ");
-      Serial.println(message);
-      Serial.println();
+      if (Serial) Serial.println(logEntry);
     }
     client.print("Hello, ");
     client.print(client.remoteIP());
@@ -143,18 +153,24 @@ void connectToNetwork() {
   reconnects++;
   if (SDAvailable) {
     File dataFile = SD.open(logFile, FILE_WRITE);
+    String logEntry = "connected to: ";
+    logEntry += String(SECRET_SSID);
+    logEntry += "\ntime: ";
+    logEntry += getTimeStamp();
+    logEntry += "\n";
+    logEntry += "reconnects: ";
+    logEntry += String(reconnects);
+    
     if (dataFile) {
+      dataFile.println(logEntry);
       dataFile.close();
-      dataFile.println("connected to: " + String(SECRET_SSID));
-      dataFile.println(getTimeStamp());
-      dataFile.println("reconnects: " + String(reconnects));
     }
   }
-  Serial.println("connected to: " + String(SECRET_SSID));
-  Serial.println(getTimeStamp());
-  IPAddress ip = WiFi.localIP();
-  Serial.println(ip);
-}
+  if (Serial) Serial.println(logEntry));
+    if (Serial) Serial.println(getTimeStamp());
+      IPAddress ip = WiFi.localIP();
+      if (Serial) Serial.println(ip);
+    }
 
 // format the time as hh:mm:ss
 String getTimeStamp() {

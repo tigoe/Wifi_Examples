@@ -22,7 +22,7 @@
 
 WiFiUDP Udp;                 // instance of UDP library
 const int remotePort = 8000; // port to which you want to send
-char remoteAddress[] = "192.168.1.18";  //IP address you want to send to
+char remoteAddress[] = "10.18.126.66";  //IP address you want to send to
 
 const int buttonPin = 4;       // pin that the pushbutton is attached to
 
