@@ -6,23 +6,17 @@
   and the simple web server example
   (https://www.arduino.cc/en/Tutorial/Wifi101WiFiWebServer)
 
-  modified 19 Feb 2018
+  modified 17 Jan 2021
   by Tom Igoe
 */
-#include <SPI.h>
-#include <WiFi101.h>
-//#include <WiFiNINA.h>
+
+//#include <WiFi101.h>      // use this for MKR1000 boards
+#include <WiFiNINA.h>       // use this for MKR1010 and Nano 33 IoT boards
 #include <WiFiUdp.h>
 #include <RTCZero.h>
+#include "arduino_secrets.h"
 
 RTCZero rtc;
-
-#include "arduino_secrets.h"
-///////please enter your sensitive data in the Secret tab/arduino_secrets.h
-char ssid[] = SECRET_SSID;        // your network SSID (name)
-char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
-
-int status = WL_IDLE_STATUS;
 WiFiServer server(80);
 
 unsigned long startTime;
@@ -33,29 +27,28 @@ void setup() {
   Serial.print("Attempting to connect to SSID: ");
 
   // attempt to connect to WiFi network:
-  while ( status != WL_CONNECTED) {
+  while ( WiFi.status() != WL_CONNECTED) {
     Serial.print("Attempting to connect to SSID: ");
-    Serial.println(ssid);
+    Serial.println(WiFi.status());
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
-    status = WiFi.begin(ssid, pass);
+    status = WiFi.begin(SECRET_SSID, SECRET_PASS);
 
-    // wait 10 seconds for connection:
+    // wait 2 seconds for connection:
     delay(2000);
   }
   server.begin();
   // you're connected now, so print out the status:
   printWiFiStatus();
-
+  // start the realtime clock
   rtc.begin();
 
+  // try to get the network time:
   unsigned long epoch;
   do {
     Serial.println("Trying to get time");
-
     epoch = WiFi.getTime();
     delay(1000);
   } while (epoch == 0);
-
 
   Serial.print("Epoch received: ");
   Serial.println(epoch);
@@ -99,7 +92,7 @@ void loop() {
           client.print("uptime: ");
           client.println(getUptime(1));
           client.println(" <br /> ");
-     
+
           client.println("</body></ html > ");
           break;
         }
