@@ -1,0 +1,1 @@
+This example has been moved to a separate repository for [websocket examples](https://github.com/tigoe/websocket-examples). 
