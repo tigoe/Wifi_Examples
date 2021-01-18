@@ -1,30 +1,40 @@
 /*
- A simple UDP Client
+  A simple UDP Client
+  Uses the following libraries:
+  http://librarymanager/All#WiFi101   // use this for MKR1000
+  http://librarymanager/All#WiFiNINA    // use this for MKR1010 or Nano 33 IoT
+  http://librarymanager/All#WiFiUDP
 
   created 22 Oct 2018
+  updated 17 Jan 2021
   by Tom Igoe
 */
 #include <SPI.h>
-#include <WiFiNINA.h> // use this for MKR1010 board
+#include <WiFiNINA.h> // use this for MKR1010 board and Nano 33 IoT
 //#include <WiFi101.h>        // use this for the MKR1000 board
 #include <WiFiUdp.h>
 #include "arduino_secrets.h"
 
 WiFiUDP Udp;           // instance of UDP library
-const int port = 8888; // port on which this client receives
+// the address and port of the server
+const char serverAddress[] = "192.168.1.165";
+const int port = 8888; // port on which this client sends and receives
+
+// request timestamp in ms:
+long lastRequest = 0;
+// interval between requests:
+int interval = 10000;
 
 void setup()
 {
   Serial.begin(9600);
   // while you're not connected to a WiFi AP,
-  while (WiFi.status() != WL_CONNECTED)
-  {
+  while (WiFi.status() != WL_CONNECTED) {
     Serial.print("Attempting to connect to Network named: ");
     Serial.println(SECRET_SSID);          // print the network name (SSID)
     WiFi.begin(SECRET_SSID, SECRET_PASS); // try to connect
     delay(2000);
   }
-
   // When you're connected, print out the device's network status:
   IPAddress ip = WiFi.localIP();
   Serial.print("IP Address: ");
@@ -32,17 +42,16 @@ void setup()
   Udp.begin(port);
 }
 
-void loop()
-{
-  if (millis() % 10000 < 2)
-  { // if ten seconds have passed:
-    String now = String(millis() /10000);
+void loop() {
+  if (millis() - lastRequest > interval ) {
+    // if ten seconds have passed:
+    String now = String(millis() / 10000);
     // start a new packet:
-    Udp.beginPacket("192.168.0.6", 8888);
+    Udp.beginPacket(serverAddress, port);
     Udp.println(now);    // add payload to it
     Udp.endPacket();     // finish and send packet
     Serial.println(now);
-
+    lastRequest = millis();
   }
 
   // if there's data available, read a packet

@@ -1,7 +1,15 @@
 /*
-  A simple UDP Client
+  A  UDP Relay time tester
+  Sends a UDP packet once every ten seconds and waits
+  for the remote host to send a reply. Then prints out the
+  round trip time.
+   Uses the following libraries:
+  http://librarymanager/All#WiFi101   // use this for MKR1000
+  http://librarymanager/All#WiFiNINA  // use this for MKR1010 or Nano 33 IoT
+  http://librarymanager/All#WiFiUDP
 
   created 22 Oct 2018
+  modified 17 Jan 2021
   by Tom Igoe
 */
 #include <SPI.h>
@@ -15,12 +23,15 @@ WiFiUDP Udp;           // instance of UDP library
 const int receivePort = 8888; // port on which this client receives
 
 // the IP address and destination you will send to:
-IPAddress destinationIP  = IPAddress(192, 168, 1, 239);
+const char destinationIP[]  = "192.168.1.165";
 int destPort = 8888;
 
-const int startButton = 2;
-int lastButtonState = HIGH;
-long startTime;
+// request timestamp in ms:
+long lastRequest = 0;
+// interval between requests:
+int interval = 10000;
+
+long sendTime;
 
 void setup() {
   Serial.begin(9600);
@@ -38,30 +49,24 @@ void setup() {
   Serial.print("IP Address: ");
   Serial.println(ip);
   Udp.begin(receivePort);
-
-  pinMode(startButton, INPUT_PULLUP);
 }
 
 void loop() {
-  int buttonState = digitalRead(startButton);
-  if (buttonState < lastButtonState) {
-    // button went low
-    startTime = millis();
+  if (millis() - lastRequest > interval ) {
+    sendTime = millis();
     // start a new packet:
     Udp.beginPacket(destinationIP, destPort);
-    Udp.println(startTime);    // add payload to it
+    Udp.println(sendTime);    // add payload to it
     Udp.endPacket();     // finish and send packet
-    Serial.println(startTime);
+    Serial.println(sendTime);
+    lastRequest = millis();
   }
-  // save current button state for comparison next time:
-  lastButtonState = buttonState;
-
 
   // if there's data available, read a packet
   if (Udp.parsePacket() > 0)
   { // parse incoming packet
     // calculate round trip time:
-    long tripTime = millis() - startTime;
+    long tripTime = millis() - sendTime;
     String message = "";
     Serial.print("From: "); // print the sender
     Serial.print(Udp.remoteIP());

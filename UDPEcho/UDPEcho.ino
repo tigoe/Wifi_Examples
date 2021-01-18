@@ -1,12 +1,17 @@
 /*
-  A simple UDP Client. Echoes whatever it receives
+  A UDP Echo Server. Echoes whatever it receives
+
+  Uses the following libraries:
+  http://librarymanager/All#WiFi101   // use this for MKR1000
+  http://librarymanager/All#WiFiNINA  // use this for MKR1010 or Nano 33 IoT
+  http://librarymanager/All#WiFiUDP
   
   created 22 Oct 2018
-  modified 25 Oct 2020
+  modified 17 Jan 2021
   by Tom Igoe
 */
 #include <SPI.h>
-#include <WiFiNINA.h> // use this for MKR1010 board
+#include <WiFiNINA.h> // use this for MKR1010 board or Nano 33 IoT
 //#include <WiFi101.h>        // use this for the MKR1000 board
 #include <WiFiUdp.h>
 #include "arduino_secrets.h"
@@ -32,11 +37,10 @@ void setup()
   Udp.begin(port);
 }
 
-void loop()
-{
+void loop() {
   // if there's data available, read a packet
-  if (Udp.parsePacket() > 0)
-  { // parse incoming packet
+  if (Udp.parsePacket() > 0) {
+    // parse incoming packet
     String message = "";
     Serial.print("From: "); // print the sender
     Serial.print(Udp.remoteIP());

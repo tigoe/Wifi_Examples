@@ -1,7 +1,14 @@
 /*
   A TCP Client/server relay
+  listens for TCP input on one port, and relays whatever it gets
+  on another. 
+    Uses the following libraries:
+  http://librarymanager/All#WiFi101   // use this for MKR1000
+  http://librarymanager/All#WiFiNINA    // use this for MKR1010 or Nano 33 IoT
+ 
 
   created 25 Oct 2020
+  modified 17 Jan 2021
   by Tom Igoe
 */
 #include <SPI.h>
@@ -10,11 +17,12 @@
 #include "arduino_secrets.h"
 
 //// Initialize the Wifi client and server
+
+
+const char destinationIP[] = "192.168.1.165";
+const int port = 8889;
 WiFiClient outgoingClient;
-WiFiServer server(8889);
-int portNumber = 8889;
-IPAddress destinationIP = IPAddress(192, 168, 1, 165);
-int destinationPort = 8889;
+WiFiServer server(port);
 
 // whether or not the incoming client was connected previously
 boolean alreadyConnected = false;
@@ -37,18 +45,12 @@ void setup() {
   // start the server:
   server.begin();
 
-  // if you're not connected, try to connect:
-  if (!outgoingClient.connected()) {
-    if (outgoingClient.connect(destinationIP, destinationPort)) {
-      outgoingClient.println("Hello!");
-    }
-  }
 }
 
 void loop() {
   // if you're not connected, try to reconnect:
   if (!outgoingClient.connected()) {
-    if (outgoingClient.connect(destinationIP, destinationPort)) {
+    if (outgoingClient.connect(destinationIP, port)) {
       outgoingClient.println("Hello!");
     }
   }
