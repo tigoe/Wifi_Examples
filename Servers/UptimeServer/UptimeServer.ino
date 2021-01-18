@@ -5,6 +5,12 @@
   (https://www.arduino.cc/en/Tutorial/WiFiRTC)
   and the simple web server example
   (https://www.arduino.cc/en/Tutorial/Wifi101WiFiWebServer)
+  Uses the following libraries:
+  http://librarymanager/All#WiFiNINA
+  or
+  http://librarymanager/All#WiFi101
+  http://librarymanager/All#WiFiUdp
+  http://librarymanager/All#RTCZero
 
   modified 17 Jan 2021
   by Tom Igoe
@@ -32,7 +38,6 @@ void setup() {
     Serial.println(WiFi.status());
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
     status = WiFi.begin(SECRET_SSID, SECRET_PASS);
-
     // wait 2 seconds for connection:
     delay(2000);
   }
@@ -76,7 +81,6 @@ void loop() {
           client.println("HTTP/1.1 200 OK");
           client.println("Content-Type: text/html");
           client.println("Connection: close");  // the connection will be closed after completion of the response
-          client.println("Refresh: 5");  // refresh the page automatically every 5 sec
           client.println();
           client.println(" <!DOCTYPE HTML > ");
           client.println("<html>\n<head></head>\n<body>");
@@ -90,7 +94,7 @@ void loop() {
           client.println(getNow());
           client.println(" <br /> ");
           client.print("uptime: ");
-          client.println(getUptime(1));
+          client.println(getUptime());
           client.println(" <br /> ");
 
           client.println("</body></ html > ");
@@ -115,29 +119,20 @@ void loop() {
   }
 }
 
-String getUptime(int format) {
+String getUptime() {
   unsigned long upNow = rtc.getEpoch() - startTime;
   int upSecs = upNow % 60;
   int upMins = upNow % 3600L / 60;
   int upHours = upNow % 86400L / 3600;
   int upDays = upNow % 31556926L / 86400L;
   String uptime = format2Digits(upDays);
-  if (format == 0) { // short
-    uptime += ":";
-    uptime += format2Digits(upHours);
-    uptime += ":";
-    uptime += format2Digits(upMins);
-    uptime += ":";
-    uptime += format2Digits(upSecs);
-  } else { // long
+  uptime += " days, ";
+  uptime += format2Digits(upHours);
+  uptime += ": ";
+  uptime += format2Digits(upMins);
+  uptime += ": ";
+  uptime += format2Digits(upSecs);
 
-    uptime += " days, ";
-    uptime += format2Digits(upHours);
-    uptime += ": ";
-    uptime += format2Digits(upMins);
-    uptime += ": ";
-    uptime += format2Digits(upSecs);
-  }
   return uptime;
 }
 

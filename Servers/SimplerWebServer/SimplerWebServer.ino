@@ -7,7 +7,8 @@
   to turn on and off the LED on pin 6.
   Uses the following libraries:
   http://librarymanager/All#WiFiNINA
-
+  or
+  http://librarymanager/All#WiFi101
 
   If the IP address of your shield is yourAddress:
   http://yourAddress/H turns the LED on
@@ -28,7 +29,6 @@
 //#include <WiFi101.h>      // use this for MKR1000 boards
 #include <WiFiNINA.h>       // use this for MKR1010 and Nano 33 IoT boards
 #include "arduino_secrets.h"
-
 
 WiFiServer server(80);
 

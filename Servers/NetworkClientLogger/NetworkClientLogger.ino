@@ -10,7 +10,7 @@
   http://librarymanager/All#SD
 
   created 18 April 2019
-  modified 11 Jan 2021
+  modified 17 Jan 2021
   by Tom Igoe
 */
 
@@ -21,8 +21,9 @@
 #include "arduino_secrets.h"
 
 // The chip select pin.
-// For MKRZero it's SDCARD_SS_PIN
+// For MKRZero it's SDCARD_SS_PIN 
 // for MKR mem shield, it's 4.
+// for Nano 33 IoT, it's 10
 const int  SD_CHIP_SELECT = 4;
 
 // whether or not the SD card initialized:
@@ -160,7 +161,7 @@ void connectToNetwork() {
     logEntry += "\n";
     logEntry += "reconnects: ";
     logEntry += String(reconnects);
-    
+
     if (dataFile) {
       dataFile.println(logEntry);
       dataFile.close();
