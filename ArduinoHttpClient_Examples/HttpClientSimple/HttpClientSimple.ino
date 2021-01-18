@@ -2,8 +2,11 @@
   Test HTTP Client
   Uses the following libraries:
   http://librarymanager/All#ArduinoHttpClient
-  http://librarymanager/All#WiFiNINA
- 
+  http://librarymanager/All#WiFi101   // use this for MKR1000
+  http://librarymanager/All#WiFiNINA    // use this for MKR1010 or Nano 33 IoT
+
+  modified 17 Jan 2021
+  by Tom Igoe
 */
 // include required libraries and config files
 //#include <WiFi101.h>      // use this for MKR1000 boards
@@ -11,15 +14,18 @@
 #include <ArduinoHttpClient.h>
 #include "arduino_secrets.h"
 
-
 WiFiClient netSocket;               // network socket to server
 const char server[] = "www.example.com";  // server name
 String route = "/";              // API route
+// request timestamp in ms:
+long lastRequest = 0;
+// interval between requests:
+int interval = 10000;
 
 void setup() {
   Serial.begin(9600);               // initialize serial communication
   while (!Serial);        // wait for serial monitor to open
-  
+
   // while you're not connected to a WiFi AP,
   while ( WiFi.status() != WL_CONNECTED) {
     Serial.print("Attempting to connect to Network named: ");
@@ -35,17 +41,20 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("making request");
-  HttpClient http(netSocket, server, 80);      // make an HTTP client
-  http.get(route);  // make a GET request
+  if (millis() - lastRequest > interval ) {
 
-  while (http.connected()) {       // while connected to the server,
-    if (http.available()) {        // if there is a response from the server,
-      String result = http.readString();  // read it
-      Serial.print(result);               // and print it
+    Serial.println("making request");
+    HttpClient http(netSocket, server, 80);      // make an HTTP client
+    http.get(route);  // make a GET request
+
+    while (http.connected()) {       // while connected to the server,
+      if (http.available()) {        // if there is a response from the server,
+        String result = http.readString();  // read it
+        Serial.print(result);               // and print it
+      }
     }
+    //  // when there's nothing left to the response,
+    http.stop();                     // close the request
+    lastRequest = millis();
   }
-  //  // when there's nothing left to the response,
-  http.stop();                     // close the request
-  delay(10000);                    // wait 10 seconds
 }

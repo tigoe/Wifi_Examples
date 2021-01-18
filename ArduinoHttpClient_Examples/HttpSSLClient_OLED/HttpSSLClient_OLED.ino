@@ -4,12 +4,13 @@
 
   makes an HTTPS call and displays the result on an SSD1306 OLED
   Uses the following libraries:
-  http://librarymanager/All#WiFiNINA
+  http://librarymanager/All#WiFi101   // use this for MKR1000
+  http://librarymanager/All#WiFiNINA    // use this for MKR1010 or Nano 33 IoT
   http://librarymanager/All#ArduinoHttpClient
   http://librarymanager/All#Adafruit_SSD1306
 
   created 12 Feb 2018
-  modified 11 Jan 2021
+  modified 17 Jan 2021
   by Tom Igoe
 */
 
@@ -31,6 +32,10 @@ WiFiSSLClient netSocket;                  // network socket to server
 const char server[] = "www.example.com";  // server name
 String route = "/";                       // API route
 int portNumber = 443;
+// request timestamp in ms:
+long lastRequest = 0;
+// interval between requests:
+int interval = 10000;
 
 void setup() {
   Serial.begin(9600);               // initialize serial communication
@@ -39,53 +44,58 @@ void setup() {
     Serial.println("Display setup failed");
     return;
   }
-  // display is good, use it:
-  // set the text color to white:
-  display.setTextColor(SSD1306_WHITE);
 
   // while you're not connected to a WiFi AP,
   while ( WiFi.status() != WL_CONNECTED) {
-    display.clearDisplay();
-    display.setCursor(0, 0);
-    display.println("Connecting to:");
-    display.println(SECRET_SSID);           // print the network name (SSID)
-    display.display();
+    showMessage("connecting to: " + String(SECRET_SSID));
     WiFi.begin(SECRET_SSID, SECRET_PASS);  // try to connect
     delay(2000);
   }
 
   // When you're connected, print out the device's network status:
-  display.clearDisplay();
-  display.setCursor(0, 0);
-  display.println(SECRET_SSID);
-  display.println(WiFi.localIP());
-  display.display();
+  String networkStatus = SECRET_SSID;
+  // add a newline:
+  networkStatus += "\n";
+  // now get the IP address, which is a 4-byte array, as a String:
+  unsigned int ip = WiFi.localIP();
+  while  (ip > 0) {
+    networkStatus += String(ip % 256);  // get the last byte as a String
+    ip >> 8;                      // shift the higher bits down
+    if (ip > 0)  networkStatus += ".";  // add a dot
+  }
+  showMessage(networkStatus);
 }
 
 void loop() {
-  HttpClient http(netSocket, server, portNumber); // make an HTTP client
-  http.get(route);                                // make a GET request
+  if (millis() - lastRequest > interval ) {
+    HttpClient http(netSocket, server, portNumber); // make an HTTP client
+    http.get(route);                                // make a GET request
 
-  // update display:
-  display.clearDisplay();
-  display.setCursor(0, 0);
-  display.print("requesting ");
-  display.print(route);
-  display.display();
+    // update display:
+    String requestStatus = "requesting " + route;
+    showMessage(requestStatus);
 
-  while (http.connected()) {              // while connected to the server,
-    if (http.available()) {               // if there is a response from the server,
-      String result = http.readString();  // read it
-      // and print it:
-      if (result.length() > 0) {
-        display.setCursor(0, 0);
-        display.clearDisplay();
-        display.print(result);
-        display.display();
+    while (http.connected()) {              // while connected to the server,
+      if (http.available()) {               // if there is a response from the server,
+        String result = http.readString();  // read it
+        // and print it:
+        if (result.length() > 0) {
+          showMessage(result);
+        }
       }
     }
+    // when there's nothing left to the response,
+    http.stop();                     // close the request
+    lastRequest = millis();
   }
-  // when there's nothing left to the response,
-  http.stop();                     // close the request
-  delay(10000);                    // wait 10 seconds
+}
+
+// displays a string on the OLED:
+void showMessage(String message) {
+  // set the text color to white:
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0, 0);
+  display.clearDisplay();
+  display.print(message);
+  display.display();
 }

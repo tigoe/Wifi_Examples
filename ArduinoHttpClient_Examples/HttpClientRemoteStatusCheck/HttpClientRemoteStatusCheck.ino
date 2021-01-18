@@ -1,8 +1,9 @@
 /*
   HTTP POST client for ArduinoHttpClient library with remote
   status check
-  Connects to a server once every ten seconds,
+  Connects to a server once a minute,
   sends a POST request and a request body.
+  Uses RTC alarm to set request time.
 
   Responds to UDP requests on port 43770 with
   the last request time and request count, so you can check status.
@@ -19,7 +20,7 @@
   http://librarymanager/All#RTCZero
 
   created 24 Feb 2018
-  modified 11 Jan 2021
+  modified 17 Jan 2021
   by Tom Igoe
 */
 #include <ArduinoHttpClient.h>
@@ -73,22 +74,15 @@ void setup() {
   rtc.begin();            // initialize RTC
   unsigned long epoch = 0;// variable for time since 1970 in seconds
   int numberOfTries = 0;  // attempts to get network time
-  int maxTries = 6;       // max times to try
 
   //try to set the time from the network:
-  while ((epoch == 0) || (numberOfTries < maxTries))  {
+  while (epoch == 0)  {
     Serial.println("Trying to get network time ");
     epoch = WiFi.getTime();
     numberOfTries++;
     delay(1000);
   }
-  // if you failed:
-  if (epoch == 0) {
-    Serial.print("NTP unreachable; couldn't get time");
-    rtc.setTime(0, 0, 0); // fill in your hour, minute, second
-    rtc.setDate(0, 0, 0); // fill in your day, month, year
-  }
-  
+
   //set an alarm for when to make a request:
   rtc.setAlarmSeconds(00);          // set an alarm for processor wakeup
   rtc.enableAlarm(rtc.MATCH_SS);    // enable it for once a minute
@@ -108,6 +102,7 @@ void requestCheck() {
   requesting = true;
 }
 
+// send an HTTP request:
 void sendRequest() {
   digitalWrite(LED_BUILTIN, HIGH);
   // assemble the path for the POST message:
