@@ -10,8 +10,12 @@
   http://librarymanager/All#RTCZero
   http://librarymanager/All#SD
 
+  Useful trick:
+  // only print to serial if the serial monitor is open:
+  if (Serial) Serial.println("something");
+  
   created 9 April 2019
-  modified 11 Jan 2021
+  modified 17 Jan 2021
   by Tom Igoe
 */
 
