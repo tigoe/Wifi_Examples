@@ -6,6 +6,11 @@
   Randomizes the note within a scale each time
 
   Uses WiFi, so will work on the MKR1010, MKR1000, or Nano 33 IoT
+      Uses the following libraries:
+  http://librarymanager/All#WiFi101   // use this for MKR1000
+  http://librarymanager/All#WiFiNINA    // use this for MKR1010 or Nano 33 IoT
+  http://librarymanager/All#WiFiUDP
+  http://librarymanager/All#OSCMessage
 
   Circuit:
       pushbutton attached to +Vcc from pin 5.
@@ -72,7 +77,7 @@ void setup() {
   Serial.print("IP Address: ");
   Serial.println(ip);
   Udp.begin(remotePort);
-  
+
 }
 
 void loop() {
@@ -109,7 +114,7 @@ void midiCommand(byte cmd, byte data1, byte  data2) {
   oscString += midiChannel;
 
   byte midimsg[] = {data1, data2, midiCmd};
-  
+
   Serial.println(oscString);
   OSCMessage msg(oscString.c_str());
   for (int b = 0; b < sizeof(midimsg); b++) {

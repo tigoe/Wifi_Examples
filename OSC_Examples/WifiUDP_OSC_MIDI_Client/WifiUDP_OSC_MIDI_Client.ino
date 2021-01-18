@@ -5,6 +5,10 @@
   https://github.com/CNMAT/OSC
   Add a new file called arduino_secrets.h to this sketch
   for your SECRET SSID (network name) and SECRET_PASS (password)
+  http://librarymanager/All#WiFi101   // use this for MKR1000
+  http://librarymanager/All#WiFiNINA    // use this for MKR1010 or Nano 33 IoT
+  http://librarymanager/All#WiFiUDP
+  http://librarymanager/All#OSCMessage
 
   created 21 Nov 2019
   by Tom Igoe
