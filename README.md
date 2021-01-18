@@ -8,11 +8,11 @@ Many of these examples also use the [ArduinoHttpClient](https://github.com/ardui
 
 All of these examples expect you to add an `arduino_secrets.h` header file to the sketch with the following information: 
 ````arduino
-#define SECRET_SSID ""
-#define SECRET_PASS ""
+#define SECRET_SSID "" // your WiFi access point name
+#define SECRET_PASS "" // your WiFi password
 ````
 
-Some will add other constants to that file as well. These files are ignored by the git repo using `.gitignore`.
+Some sketches will add other constants to that file as well. These files are ignored by the git repo using `.gitignore`.
 
 ## WiFi Connection
 * [WiFi_Reconnect](https://github.com/tigoe/Wifi101_examples/tree/master/WiFi_Connection_Examples/WiFi_Reconnect) -  Shows how to reconnect to the network in the main loop. Also prints out network signal strength (RSSI).
