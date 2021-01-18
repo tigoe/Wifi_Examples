@@ -1,28 +1,45 @@
 /*
   Connected Devices client
 
-  Connects to a server using HTTPS and uploads data.
+  Connects to a server using HTTPS and uploads data. This
+  client works with the connected devices server API at
+  https://github.com/don/itp-connected-devices
+
   For details, check connected devices class website.
   Works with MKR1010, MKR1000, ESP8266
+  Uses the following libraries:
+   http://librarymanager/All#WiFi101  // use this for MKR1000
+   http://librarymanager/All#WiFiNINA  // use this for MKR1010, Nano 33 IoT
+   http://librarymanager/All#ESP8266WiFi  // use this with ESP8266
+   http://librarymanager/All#ArduinoHttpClient
+   http://librarymanager/All#Arduino_JSON
 
   created 18 Feb 2019
   by Tom Igoe
 */
 // include required libraries and config files
 #include <SPI.h>
-#include <WiFi101.h>        // for MKR1000 modules
-//#include <WiFiNINA.h>     // for MKR1010 modules
-//#include <ESP8266WiFi.h>  // for ESP8266 modules
+//#include <WiFi101.h>        // for MKR1000 modules
+#include <WiFiNINA.h>         // for MKR1010 modules
+//#include <ESP8266WiFi.h>    // for ESP8266 modules
 #include <ArduinoHttpClient.h>
+#include <Arduino_JSON.h>
 #include "arduino_secrets.h"
 
-byte mac[6];                       // mac address of your device
-WiFiSSLClient netSocket;           // network socket to server
+byte mac[6];                    // mac address of your device
+WiFiSSLClient netSocket;        // network socket to server
 const char server[] = SECRET_SERVER;  // server name
 String route = "/data";         // API route
 
 // the HTTP client is global so you can use it in multiple functions below:
 HttpClient client(netSocket, server, 443);
+// a JSON variable for the body of your requests:
+JSONVar body;
+
+// request timestamp in ms:
+long lastRequest = 0;
+// interval between requests:
+int interval = 10000;
 
 void setup() {
   Serial.begin(9600);              // initialize serial communication
@@ -43,69 +60,66 @@ void setup() {
   Serial.println(ip);
   Serial.print("MAC Address: ");
   Serial.println(macToString(mac));
+
+  // add the mac address and session key to the body,
+  // since they won't change:
+  body["macAddress"] = macToString(mac);
+  body["sessionKey"] = SECRET_SESSIONKEY;
 }
 
 void loop() {
-  // read sensor (in this case, a TMP36 temperature sensor):
-  int sensorValue = analogRead(A0);
-  // convert reading to voltage level:
-  float voltage = sensorValue *  (3.3 / 1024.0);
-  // convert the millivolts to temperature celsius:
-  float temperature = (voltage - 0.5) / 0.01;
-  String sensorData = "{\"temperature\":";
-  sensorData += String(temperature);
-  sensorData += "}";
-  
-  // use this for POST:
-  // postData(sensorData);
-  //  or use this for GET:
-  getData();
+  if (millis() - lastRequest > interval ) {
 
-  int transactionID = 539;
-  //  or use this to GET one datum:
-  //getDatum(transactionID);
-  //  or use this to DELETE one datum:
-  //deleteDatum(transactionID);
+    // this is your data. It's a JSON object that will go
+    // in the other JSON object (the body):
+    JSONVar sensorData;
+    // read sensor (in this case, a TMP36 temperature sensor):
+    int sensorValue = analogRead(A0);
+    // convert reading to voltage level:
+    float voltage = sensorValue *  (3.3 / 1024.0);
+    // convert the millivolts to temperature celsius:
+    float temperature = (voltage - 0.5) / 0.01;
+    sensorData["temperature"] = temperature;
 
-  // read the status code and body of the response
-  int statusCode = client.responseStatusCode();
-  String response = client.responseBody();
+    // use this for POST:
+    postData(JSON.stringify(sensorData));
+    //  or use this for GET:
+    //  getData();
+    int transactionID = 539;
+    //  or use this to GET one datum:
+    //  getDatum(transactionID);
+    //  or use this to DELETE one datum:
+    //deleteDatum(transactionID);
 
-  Serial.print("Status code: ");
-  Serial.println(statusCode);
-  Serial.print("Response: " );
-  Serial.println(response);
-  // when there's nothing left to the response,
-  client.stop();           // close the request
-  // stop forever
-  while (true);
+    // read the status code and body of the response
+    int statusCode = client.responseStatusCode();
+    String response = client.responseBody();
+
+    // print out the response:
+    Serial.print("Status code: ");
+    Serial.println(statusCode);
+    Serial.print("Response: " );
+    Serial.println(response);
+    // when there's nothing left to the response,
+    client.stop();           // close the request
+    // timestamp the time of request:
+    lastRequest = millis();
+  }
 }
 
 void postData(String newData) {
-  // have to insert extra \ before " in data JSON,
-  // since it's a JSON string within a JSON string:
-  newData.replace("\"", "\\\"");
   // set the content type and fill in the POST data:
   String contentType = "application/json";
   // the template for the body of the POST request:
-  String body = " {\"macAddress\":\"MAC\",\"sessionKey\":\"KEY\",\"data\":\"DATA\"}";
-  // replace the template placeholders with actual values:
-  body.replace("MAC", macToString(mac));
-  body.replace("KEY", SECRET_SESSIONKEY);
-  body.replace("DATA", newData);
+  body["data"] = newData;
   Serial.println(body);
   // make the request
-  client.post(route, contentType, body);
+  client.post(route, contentType, JSON.stringify(body));
 }
 
 void getData() {
   // set the content type and fill in the body:
   String contentType = "application/json";
-  // the template for the body of the POST request:
-  String body = " {\"macAddress\":\"MAC\",\"sessionKey\":\"KEY\"}";
-  // replace the template placeholders with actual values:
-  body.replace("MAC", macToString(mac));
-  body.replace("KEY", SECRET_SESSIONKEY);
 
   // make the request:
   client.beginRequest();
@@ -113,19 +127,13 @@ void getData() {
   client.sendHeader("Content-Type", "application/json");
   client.sendHeader("Content-Length", body.length());
   client.beginBody();
-  client.print(body);
+  client.println(body);
   client.endRequest();
 }
 
 void getDatum(int newData) {
   // set the content type and fill in the body:
   String contentType = "application/json";
-  // the template for the body of the POST request:
-  String body = " {\"macAddress\":\"MAC\",\"sessionKey\":\"KEY\"}";
-  // replace the template placeholders with actual values:
-  body.replace("MAC", macToString(mac));
-  body.replace("KEY", SECRET_SESSIONKEY);
-
   // add the query to the route:
   String request = route + "/";
   request += String(newData);
