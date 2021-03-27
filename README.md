@@ -16,9 +16,9 @@ Some sketches will add other constants to that file as well. These files are ign
 
 ## WiFi Connection
 * [WiFi_Reconnect](https://github.com/tigoe/Wifi101_examples/tree/master/WiFi_Connection_Examples/WiFi_Reconnect) -  Shows how to reconnect to the network in the main loop. Also prints out network signal strength (RSSI).
-* [WiFi_RssiTest](https://github.com/tigoe/Wifi101_examples/tree/master/WiFi_Connection_Examples/WiFi_Reconnect) - Prints the following to the serial monitor: SSID, BSSID, RSSI, WiFi status, reconnect count.
-* [WiFi_ConnectionTimeLogger](https://github.com/tigoe/Wifi101_examples/tree/master/WiFi_Connection_Examples/WiFi_Reconnect) - Logs the health of the network connection to an SD card. Periodically logs: date,time, MAC address, SSID, BSSID, IP Address, signal strength (RSSI), WiFi status, reconnect count, and uptime.
-* [WiFI_ipAddress](https://github.com/tigoe/Wifi101_examples/tree/master/WiFi_Connection_Examples/WiFi_Reconnect) - The IP address in the WiFi libraries is a 4-byte array. This example shows how to get it as a String.
+* [WiFi_RssiTest](https://github.com/tigoe/Wifi101_examples/tree/master/WiFi_Connection_Examples/WiFi_RssiTest) - Prints the following to the serial monitor: SSID, BSSID, RSSI, WiFi status, reconnect count.
+* [WiFi_ConnectionTimeLogger](https://github.com/tigoe/Wifi101_examples/tree/master/WiFi_Connection_Examples/WiFi_ConnectionTimeLogger) - Logs the health of the network connection to an SD card. Periodically logs: date,time, MAC address, SSID, BSSID, IP Address, signal strength (RSSI), WiFi status, reconnect count, and uptime.
+* [WiFI_ipAddress](https://github.com/tigoe/Wifi101_examples/tree/master/WiFi_Connection_Examples/WiFI_ipAddress) - The IP address in the WiFi libraries is a 4-byte array. This example shows how to get it as a String.
 
 ## Arduino HTTP Clients
 * [HttpClientSimple](https://github.com/tigoe/Wifi101_examples/tree/master/ArduinoHttpClient_Examples/HttpClientSimple) - a simple example of an HTTP client. 
