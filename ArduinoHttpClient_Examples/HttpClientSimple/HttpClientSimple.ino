@@ -6,7 +6,7 @@
   http://librarymanager/All#WiFiNINA  // use this for MKR1010 or Nano 33 IoT
   http://librarymanager/All#WiFiS3    // use this for Uno R4 WiFi
 
-  modified 12 July 2023
+  modified 13 July 2023
   by Tom Igoe
 */
 // include required libraries and config files
@@ -16,9 +16,10 @@
 #include <ArduinoHttpClient.h>
 #include "arduino_secrets.h"
 
-WiFiSSLClient netSocket;                  // network socket to server
-const char server[] = "www.example.com";  // server name
-String route = "/";                       // API route
+WiFiClient netSocket;                       // network socket to server
+HttpClient request(netSocket, server, 80);  // make an HTTP client
+const char server[] = "arduino.cc";         // server name
+String route = "/";                         // API route
 // request timestamp in ms:
 long lastRequest = 0;
 // interval between requests:
@@ -47,32 +48,15 @@ void setup() {
 
 void loop() {
   if (millis() - lastRequest > interval) {
-    long responseStartTime = millis();
-    HttpClient request(netSocket, server, 443);  // make an HTTP client
-    // set the timeout for the HTTP request, in ms:
-    // request.setHttpResponseTimeout(60000);
-    Serial.print("Starting request. HTTP response timeout: ");
-    Serial.println(request.httpResponseTimeout());
     request.get(route);  // make a GET request
-
+    // print the response code and the body when they arrive:
     int statusCode = request.responseStatusCode();
-    //convert the statusCode to 1 or -1 and add to successes:
-    successes += abs(statusCode) / statusCode;
-    // increment tries:
-    tries++;
-    String response = request.responseBody();
-    Serial.println("Tries: " + String(tries));
-    Serial.println("Successes: " + String(successes));
-    // print the status code and response :
     Serial.print("Status code: ");
     Serial.println(statusCode);
+    String response = request.responseBody();
     Serial.print("Response: ");
     Serial.println(response);
-
-    // calculate the response time, in ms:
-    long responseEndTime = millis() - responseStartTime;
-    Serial.print("Response time (ms): ");
-    Serial.println(responseEndTime);
+    // save the request time for comparison next time:
     lastRequest = millis();
   }
 }
