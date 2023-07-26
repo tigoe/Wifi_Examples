@@ -1,6 +1,6 @@
-# Wifi101_examples
+# Wifi Examples
 
-These examples are for the Arduino [WiFi101](https://www.arduino.cc/en/Reference/WiFi101) and [WiFiNINA](https://www.arduino.cc/en/Reference/WiFiNINA) libraries. The former works with the Arduino [MKR1000](https://store.arduino.cc/usa/arduino-mkr1000) board, and the latter work with the [MKR1010](https://store.arduino.cc/usa/mkr-wifi-1010), [Nano 33 IoT](https://store.arduino.cc/usa/nano-33-iot), and [Uno WiFi rev 2](https://store.arduino.cc/usa/arduino-uno-wifi-rev2) boards. Many of these examples are also compatible with the ESP8266WiFi library, which has a similar API to the WIFi101 and WiFiNINA libraries. 
+These examples are for the Arduino WiFi libraries, including the [WiFi101](https://www.arduino.cc/en/Reference/WiFi101) library for the Arduino [MKR1000](https://store.arduino.cc/usa/arduino-mkr1000) board, and the [WiFiNINA](https://www.arduino.cc/en/Reference/WiFiNINA) library for the [MKR1010](https://store.arduino.cc/usa/mkr-wifi-1010), [Nano 33 IoT](https://store.arduino.cc/usa/nano-33-iot), and [Uno WiFi rev 2](https://store.arduino.cc/usa/arduino-uno-wifi-rev2) boards. I'm starting to test these with the [WiFiS3](https://docs.arduino.cc/tutorials/uno-r4-wifi/wifi-examples) library for the [Uno R4 WiFi](https://docs.arduino.cc/hardware/uno-r4-wifi) as well. Many of these examples are also compatible with the ESP8266WiFi library, which has a similar API to the WIFi101 and WiFiNINA libraries. 
 
 Many of these examples also use the [ArduinoHttpClient](https://github.com/arduino-libraries/ArduinoHttpClient) and [Arduino_JSON](https://github.com/arduino-libraries/Arduino_JSON) libraries.
 
