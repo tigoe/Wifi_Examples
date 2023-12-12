@@ -16,11 +16,12 @@ Many of these examples also use the [ArduinoHttpClient](https://github.com/ardui
 
 All of these examples require you to include the WiFi library for their board at the top of the code. Not all of the examples have been updated for the newest boards, however. Here's a guide to including the right library:
 
-* [MKR1000](https://store.arduino.cc/usa/arduino-mkr1000) board:  `#include <WiFi101.h>`
-*  [MKR1010](https://store.arduino.cc/usa/mkr-wifi-1010), [Nano 33 IoT](https://store.arduino.cc/usa/nano-33-iot), and [Uno WiFi rev 2](https://store.arduino.cc/usa/arduino-uno-wifi-rev2) boards:  `#include <WiFiNINA.h>`
-* [Uno R4 WiFi](https://docs.arduino.cc/hardware/uno-r4-wifi): `#include <WiFiS3.h>`
-* [Nano ESP32](https://docs.arduino.cc/hardware/nano-esp32):  `#include <WiFi.h>`
-
+| Board | #include line |
+| ----------- | ----------- |
+| MKR1000 | `#include <WiFi101.h>` |
+| MKR1010, Nano 33 IoT, and Uno WiFi rev 2 | `#include <WiFiNINA.h>` |
+| Uno R4 WiFi | `#include <WiFiS3.h>` |
+| Nano ESP32 | `#include <WiFi.h>` |
 
 ## Credentials Header file
 
