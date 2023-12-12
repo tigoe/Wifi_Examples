@@ -12,13 +12,13 @@
   #include <WiFi.h>
 
   created 25 Oct 2020
-  modified 11 Dec 2023
+  modified 12 Dec 2023
   by Tom Igoe
 */
 #include <SPI.h>
-#include <WiFiNINA.h>  // use this for MKR1010 board and Nano 33 IoT
+// #include <WiFiNINA.h>  // use this for MKR1010 board and Nano 33 IoT
 // #include <WiFi101.h>       // use this for the MKR1000 board
-// #include <WiFiS3.h>        // use this for the Uno R4 WiFi board
+#include <WiFiS3.h>        // use this for the Uno R4 WiFi board
 // #include <WiFi.h>             // use this for the Nano ESP32 board
 #include "arduino_secrets.h"
 
