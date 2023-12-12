@@ -10,7 +10,7 @@
   #include <WiFi.h>
 
   created 22 Oct 2018
-  updated 11 Dec 2023
+  updated 12 Dec 2023
   by Tom Igoe
 */
 #include <SPI.h>
