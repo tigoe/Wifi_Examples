@@ -16,8 +16,8 @@
 #include <SPI.h>
 // #include <WiFiNINA.h>  // use this for MKR1010 board and Nano 33 IoT
 // #include <WiFi101.h>       // use this for the MKR1000 board
-// #include <WiFiS3.h>        // use this for the Uno R4 WiFi board
-#include <WiFi.h>             // use this for the Nano ESP32 board
+#include <WiFiS3.h>        // use this for the Uno R4 WiFi board
+// #include <WiFi.h>             // use this for the Nano ESP32 board
 #include "arduino_secrets.h"
 
 WiFiServer server(8080);
@@ -58,7 +58,6 @@ void loop() {
     }
 
     if (client.available() > 0) {
-      Serial.println(client.available());
       // read the bytes incoming from the client:
       char thisChar = client.read();
       // echo the bytes back to the client:
