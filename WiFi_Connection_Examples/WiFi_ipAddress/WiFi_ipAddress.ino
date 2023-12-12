@@ -7,38 +7,46 @@
   http://librarymanager/All#WiFiNINA
   or
   http://librarymanager/All#WiFi101
+  or
+  For the Arduino Uno R4 WiFi, use
+  #include <WiFiS3.h>
+  For the Nano ESP32 use 
+  #include <WiFi.h>
 
   created 17 Jan 2021
+  updated 11 Dec 2023
   by Tom Igoe
 */
 
-#include <WiFiNINA.h>   // use this for MKR1010 or Nano 33 IoT
+#include <WiFiNINA.h>  // use this for MKR1010 or Nano 33 IoT
 //#include <WiFi101.h>  // use this for MKR1000
+
 #include "arduino_secrets.h"
 
 void setup() {
   // initialize serial:
   Serial.begin(9600);
   // wait for Serial Monitor to open:
-  while (!Serial);
+  while (!Serial)
+    ;
   // use the builtin LED to show network status:
   pinMode(LED_BUILTIN, OUTPUT);
   // connect:
   connectToNetwork();
-  
+
   // now get the IP address, which is a 4-byte array:
   unsigned int ip = WiFi.localIP();
   String ipString = "";
-  while  (ip > 0) {
+  while (ip > 0) {
     ipString += String(ip % 256);  // get the last byte as a String
-    ip >> 8;                      // shift the higher bits down
-    if (ip > 0)  ipString += ".";  // add a dot
+    ip >> 8;                       // shift the higher bits down
+    if (ip > 0) ipString += ".";   // add a dot
   }
   Serial.println(ipString);
-  
+
   // you can also use print to convert the IP address to a String.
-  // there's no way to return it though, so you can't combine it 
-  // with other text unless you're printing it. 
+  // there's no way to return it though, so you can't combine it
+  // with other text unless you're printing it.
   Serial.println(WiFi.localIP());
 }
 
@@ -51,10 +59,10 @@ void loop() {
 }
 
 void connectToNetwork() {
-  while ( WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED) {
     //Connect to WPA / WPA2 network:
     WiFi.begin(SECRET_SSID, SECRET_PASS);
     delay(2000);
   }
-      digitalWrite(LED_BUILTIN, HIGH);
+  digitalWrite(LED_BUILTIN, HIGH);
 }
