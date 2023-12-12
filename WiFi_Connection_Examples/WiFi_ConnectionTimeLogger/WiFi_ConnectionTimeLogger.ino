@@ -10,6 +10,9 @@
   http://librarymanager/All#RTCZero
   http://librarymanager/All#SD
 
+  Note: the RTCZero library works only on the Nano 33 IoT,
+  MKR1000, and MKR1010 WiFi boards
+
   Useful trick:
   // only print to serial if the serial monitor is open:
   if (Serial) Serial.println("something");
@@ -20,7 +23,7 @@
 */
 
 #include <WiFiNINA.h>   // use this for MKR1010 or Nano 33 IoT
-//#include <WiFi101.h>  // use this for MKR1000
+// #include <WiFi101.h>  // use this for MKR1000
 #include <RTCZero.h>
 #include <SD.h>
 #include "arduino_secrets.h"
