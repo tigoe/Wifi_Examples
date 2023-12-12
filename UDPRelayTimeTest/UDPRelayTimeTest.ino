@@ -5,7 +5,7 @@
   round trip time.
 
   You can test this on the POSIX command line with netcat like so:
-  $ nc -cul 8888 | nc -u 192.168.1.195 8888 
+  $ nc -ul 8888 | nc -cu your.arduino.ip.address 8888 
 
    Uses the following libraries:
   http://librarymanager/All#WiFi101   // use this for MKR1000
@@ -22,9 +22,9 @@ For the Arduino Uno R4 WiFi, use
   by Tom Igoe
 */
 #include <SPI.h>
-#include <WiFiNINA.h>  // use this for MKR1010 board and Nano 33 IoT
+// #include <WiFiNINA.h>  // use this for MKR1010 board and Nano 33 IoT
 // #include <WiFi101.h>       // use this for the MKR1000 board
-// #include <WiFiS3.h>        // use this for the Uno R4 WiFi board
+#include <WiFiS3.h>  // use this for the Uno R4 WiFi board
 // #include <WiFi.h>  // use this for the Nano ESP32 board
 #include <WiFiUdp.h>
 
