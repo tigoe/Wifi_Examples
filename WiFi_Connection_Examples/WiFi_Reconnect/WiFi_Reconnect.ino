@@ -9,12 +9,18 @@
   http://librarymanager/All#WiFiNINA
   or
   http://librarymanager/All#WiFi101
+  or
+  For the Arduino Uno R4 WiFi, use
+  #include <WiFiS3.h>
+  For the Nano ESP32 use 
+  #include <WiFi.h>
 
   created 1 Mar 2018
-  updated 11 Jan 2021
+  updated 11 Dec 2023
   by Tom Igoe
 */
-#include <WiFiNINA.h>   // use this for MKR1010 or Nano 33 IoT
+
+#include <WiFiNINA.h>  // use this for MKR1010 or Nano 33 IoT
 //#include <WiFi101.h>  // use this for MKR1000
 
 // put your network SSID and password in
@@ -33,15 +39,15 @@ void loop() {
   }
   if (Serial) Serial.print("WiFi RSSI: ");
   if (Serial) Serial.print(WiFi.RSSI());
-  if (Serial) Serial.println( " dBm");
+  if (Serial) Serial.println(" dBm");
 }
 
 void connectToNetwork() {
   // try to connect to the network:
-  while ( WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED) {
     digitalWrite(LED_BUILTIN, LOW);
     Serial.print("Attempting to connect to Network named: ");
-    Serial.println(SECRET_SSID);       // print the network name (SSID);
+    Serial.println(SECRET_SSID);  // print the network name (SSID);
     // Connect to WPA/WPA2 network:
     WiFi.begin(SECRET_SSID, SECRET_PASS);
   }
