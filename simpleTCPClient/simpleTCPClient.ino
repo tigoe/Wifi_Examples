@@ -10,21 +10,28 @@
   http://librarymanager/All#WiFi101   // use this for MKR1000
   http://librarymanager/All#WiFiNINA    // use this for MKR1010 or Nano 33 IoT
   http://librarymanager/All#WiFiS3    // use this for Uno R4 WiFi
+  
+  For the Arduino Uno R4 WiFi, use
+  #include <WiFiS3.h>
+  For the Nano ESP32 use 
+  #include <WiFi.h>
+
 
   created 22 Oct 2018
-  updated 11 Jul 2023
+  updated 11 Dec 2023
   by Tom Igoe
 */
 #include <SPI.h>
 // #include <WiFiNINA.h> // use this for MKR1010 board and Nano 33 IoT
-// #include <WiFi101.h>        // use this for the MKR1000 board
-#include <WiFiS3.h>        // use this for the Uno R4 WiFi board
+// #include <WiFi101.h>       // use this for the MKR1000 board
+// #include <WiFiS3.h>        // use this for the Uno R4 WiFi board
+#include <WiFi.h>             // use this for the Nano ESP32 board
 #include "arduino_secrets.h"
 
 // Initialize the Wifi client library
 WiFiClient client;
 // the address and port of the server
-const char serverAddress[] = "10.130.22.70";
+const char serverAddress[] = "192.168.1.91";
 int port = 8080;
 
 // request timestamp in ms:
@@ -37,8 +44,8 @@ void setup() {
   // while you're not connected to a WiFi AP,
   while (WiFi.status() != WL_CONNECTED) {
     Serial.print("Attempting to connect to Network named: ");
-    Serial.println(SECRET_SSID);          // print the network name (SSID)
-    WiFi.begin(SECRET_SSID, SECRET_PASS); // try to connect
+    Serial.println(SECRET_SSID);           // print the network name (SSID)
+    WiFi.begin(SECRET_SSID, SECRET_PASS);  // try to connect
     delay(2000);
   }
 
@@ -56,7 +63,7 @@ void loop() {
   }
   // if you're connected, send every ten seconds:
   else {
-    if (millis() - lastRequest > interval ) {
+    if (millis() - lastRequest > interval) {
       String now = String(millis() / 10000);
       client.println(now);
       Serial.println(now);
