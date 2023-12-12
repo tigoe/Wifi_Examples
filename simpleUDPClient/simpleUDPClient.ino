@@ -4,20 +4,28 @@
   http://librarymanager/All#WiFi101   // use this for MKR1000
   http://librarymanager/All#WiFiNINA    // use this for MKR1010 or Nano 33 IoT
   http://librarymanager/All#WiFiUDP
+ 
+  For the Arduino Uno R4 WiFi, use
+  #include <WiFiS3.h>
+  For the Nano ESP32 use 
+  #include <WiFi.h>
 
   created 22 Oct 2018
-  updated 17 Jan 2021
+  updated 11 Dec 2023
   by Tom Igoe
 */
 #include <SPI.h>
-#include <WiFiNINA.h> // use this for MKR1010 board and Nano 33 IoT
-//#include <WiFi101.h>        // use this for the MKR1000 board
+#include <WiFiNINA.h>  // use this for MKR1010 board and Nano 33 IoT
+// #include <WiFi101.h>       // use this for the MKR1000 board
+// #include <WiFiS3.h>        // use this for the Uno R4 WiFi board
+// #include <WiFi.h>             // use this for the Nano ESP32 board
+
 #include <WiFiUdp.h>
 #include "arduino_secrets.h"
 
 WiFiUDP Udp;           // instance of UDP library
 // the address and port of the server
-const char serverAddress[] = "192.168.1.165";
+const char serverAddress[] = "192.168.1.91";
 const int port = 8888; // port on which this client sends and receives
 
 // request timestamp in ms:
