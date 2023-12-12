@@ -22,10 +22,10 @@
   by Tom Igoe
 */
 #include <SPI.h>
-// #include <WiFiNINA.h> // use this for MKR1010 board and Nano 33 IoT
+#include <WiFiNINA.h>  // use this for MKR1010 board and Nano 33 IoT
 // #include <WiFi101.h>       // use this for the MKR1000 board
 // #include <WiFiS3.h>        // use this for the Uno R4 WiFi board
-#include <WiFi.h>             // use this for the Nano ESP32 board
+// #include <WiFi.h>             // use this for the Nano ESP32 board
 #include "arduino_secrets.h"
 
 // Initialize the Wifi client library
