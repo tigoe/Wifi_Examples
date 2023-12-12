@@ -4,9 +4,8 @@
   for the remote host to send a reply. Then prints out the
   round trip time.
 
-  You can test this on the POSIX command line with ncat,
-  which is part of the nmap network tool set, like so:
-  $ ncat -e /bin/cat -kul 8888
+  You can test this on the POSIX command line with netcat like so:
+  $ nc -cul 8888 | nc -u 192.168.1.195 8888 
 
    Uses the following libraries:
   http://librarymanager/All#WiFi101   // use this for MKR1000
