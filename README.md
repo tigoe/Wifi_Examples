@@ -1,12 +1,8 @@
 # Wifi Examples
 
-These examples are for the Arduino WiFi libraries. These examples will work with: 
-* the [WiFi101](https://www.arduino.cc/en/Reference/WiFi101) library for the Arduino [MKR1000](https://store.arduino.cc/usa/arduino-mkr1000) board
-*  the [WiFiNINA](https://www.arduino.cc/en/Reference/WiFiNINA) library for the [MKR1010](https://store.arduino.cc/usa/mkr-wifi-1010), [Nano 33 IoT](https://store.arduino.cc/usa/nano-33-iot), and [Uno WiFi rev 2](https://store.arduino.cc/usa/arduino-uno-wifi-rev2) boards
-* the [WiFiS3](https://docs.arduino.cc/tutorials/uno-r4-wifi/wifi-examples) library for the [Uno R4 WiFi](https://docs.arduino.cc/hardware/uno-r4-wifi) 
-* the WiFi library for the [Nano ESP32](https://docs.arduino.cc/hardware/nano-esp32)
+These examples are for the Arduino WiFi libraries. These examples will work with:  the Arduino [MKR1000](https://store.arduino.cc/usa/arduino-mkr1000) board; the [MKR1010](https://store.arduino.cc/usa/mkr-wifi-1010); [Nano 33 IoT](https://store.arduino.cc/usa/nano-33-iot) board; [Uno WiFi rev 2](https://store.arduino.cc/usa/arduino-uno-wifi-rev2) boards; the [Uno R4 WiFi](https://docs.arduino.cc/hardware/uno-r4-wifi) board; and the [Nano ESP32](https://docs.arduino.cc/hardware/nano-esp32) board.
 
- The libraries mentioned above should be API-compatible with each other in these examples, though some will have features that others do not. Any library-specific examples in this repository are noted as such.
+ The libraries for these boards should be API-compatible with each other in these examples, though some will have features that others do not. Any library-specific examples in this repository are noted as such.
  
 Many of these examples are also compatible with the ESP8266WiFi library, which has a similar API to these libraries. 
 
@@ -16,12 +12,12 @@ Many of these examples also use the [ArduinoHttpClient](https://github.com/ardui
 
 All of these examples require you to include the WiFi library for their board at the top of the code. Not all of the examples have been updated for the newest boards, however. Here's a guide to including the right library:
 
-| Board | #include line |
-| ----------- | ----------- |
-| MKR1000 | `#include <WiFi101.h>` |
-| MKR1010, Nano 33 IoT, and Uno WiFi rev 2 | `#include <WiFiNINA.h>` |
-| Uno R4 WiFi | `#include <WiFiS3.h>` |
-| Nano ESP32 | `#include <WiFi.h>` |
+| Board | Library | #include line |
+| --- | --- | --- |
+| MKR1000 | [WiFi101](https://www.arduino.cc/en/Reference/WiFi101) library | `#include <WiFi101.h>` |
+| MKR1010, Nano 33 IoT, and Uno WiFi rev 2 | [WiFiNINA](https://www.arduino.cc/en/Reference/WiFiNINA) library | `#include <WiFiNINA.h>` |
+| Uno R4 WiFi | [WiFiS3](https://docs.arduino.cc/tutorials/uno-r4-wifi/wifi-examples) library | `#include <WiFiS3.h>` |
+| Nano ESP32 | WiFi library for the [Nano ESP32](https://docs.arduino.cc/hardware/nano-esp32) | `#include <WiFi.h>` |
 
 ## Credentials Header file
 
