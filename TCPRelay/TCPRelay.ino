@@ -6,21 +6,25 @@
   http://librarymanager/All#WiFi101   // use this for MKR1000
   http://librarymanager/All#WiFiNINA    // use this for MKR1010 or Nano 33 IoT
  
+  For the Arduino Uno R4 WiFi, use
+  #include <WiFiS3.h>
+  For the Nano ESP32 use 
+  #include <WiFi.h>
 
   created 25 Oct 2020
-  modified 17 Jan 2021
+  modified 11 Dec 2023
   by Tom Igoe
 */
 #include <SPI.h>
-#include <WiFiNINA.h> // use this for MKR1010 board
-//#include <WiFi101.h>        // use this for the MKR1000 board
+#include <WiFiNINA.h>  // use this for MKR1010 board and Nano 33 IoT
+// #include <WiFi101.h>       // use this for the MKR1000 board
+// #include <WiFiS3.h>        // use this for the Uno R4 WiFi board
+// #include <WiFi.h>             // use this for the Nano ESP32 board
 #include "arduino_secrets.h"
 
 //// Initialize the Wifi client and server
-
-
-const char destinationIP[] = "192.168.1.165";
-const int port = 8889;
+const char destinationIP[] = "192.168.1.91";
+const int port = 8080;
 WiFiClient outgoingClient;
 WiFiServer server(port);
 
