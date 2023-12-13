@@ -28,6 +28,9 @@
 unsigned long epoch = 0;
 unsigned long lastMillis = 0;
 unsigned long lastEpoch = 0;
+// last time you successfully connected to the network in epoch time:
+unsigned long lastConnectionTime = 0;
+
 void setup() {
   // initialize serial and builtin LED:
   Serial.begin(9600);
@@ -44,7 +47,7 @@ void loop() {
     return;
   }
   // check time drift once an hour:
-  if (epoch - lastEpoch > 60*60) getNetworkTime();
+  if (epoch - lastEpoch > 60 * 60) getNetworkTime();
   if (millis() > lastMillis + 1000) {
     // increment the epoch:
     epoch++;
@@ -82,6 +85,8 @@ String format2Digits(int number) {
 }
 
 void connectToNetwork() {
+  Serial.print("Time in seconds since last disconnect: ");
+  Serial.println(epoch - lastConnectionTime);
   Serial.print("Attempting to connect to network ");
   Serial.println(SECRET_SSID);
   // try to connect to the network:
@@ -93,11 +98,17 @@ void connectToNetwork() {
     WiFi.begin(SECRET_SSID, SECRET_PASS);
     delay(2000);
   }
-  // When you're connected, print out the device's network status:
+  // When you're connected,
+  // save the connection time:
+  lastConnectionTime = epoch;
+  // print out the device's network status:
   IPAddress ip = WiFi.localIP();
   Serial.print("IP Address: ");
   Serial.println(ip);
-  // turn on the LED:
+  // print the signal strength:
+  Serial.print("Signal Strength: ");
+  Serial.println(WiFi.RSSI());
+  // turn on the builtin LED:
   digitalWrite(LED_BUILTIN, HIGH);
   getNetworkTime();
 }
@@ -109,7 +120,7 @@ void getNetworkTime() {
   do {
     epoch = WiFi.getTime();
     delay(2000);
-    Serial.print("NTP request attempt");
+    Serial.println("NTP request attempt");
   } while (epoch <= 0);
   if (epoch != 0) {
     // print the last calculated time:
