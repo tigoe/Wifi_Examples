@@ -19,7 +19,6 @@
   modified 12 Dec 2023
   by Tom Igoe
 */
-#include <SPI.h>
 #include <WiFiNINA.h>  // use this for MKR1010 board and Nano 33 IoT
 // #include <WiFi101.h>       // use this for the MKR1000 board
 // #include <WiFiS3.h>        // use this for the Uno R4 WiFi board
