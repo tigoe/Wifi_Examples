@@ -1,6 +1,6 @@
 
 /*
-  WiFi getTime example timer
+  WiFi getTime example
 
   Uses the WiFi.getTime() command to get the time from the network.
 
