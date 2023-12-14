@@ -93,8 +93,7 @@ unsigned long getTime() {
   Udp.write(packetBuffer, NTP_PACKET_SIZE);
   Udp.endPacket();
   // wait for return packet:
-  while (!Udp.parsePacket())
-    ;
+  while (!Udp.parsePacket());
   // Parse the return packet:
   Udp.read(packetBuffer, NTP_PACKET_SIZE);
   //the timestamp  (32 bit integer) starts at byte 40
