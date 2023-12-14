@@ -34,7 +34,6 @@
 WiFiUDP Udp;
 // local port to listen for UDP packets
 const int localPort = 2390;
-unsigned long epoch = 0;
 
 void setup() {
   // initialize serial:
@@ -52,9 +51,9 @@ void loop() {
   // get the time. Use this for the WiFiNINA lib:
   // epoch = WiFi.getTime();
   // get the time. Use this for the other libs:
-  epoch = getTime();
-  delay(10000);
+  unsigned long epoch = getTime();
   Serial.println(epoch);
+  delay(5000);
 }
 
 void connectToNetwork() {
@@ -74,7 +73,6 @@ void connectToNetwork() {
   Serial.print("Signal Strength: ");
   Serial.println(WiFi.RSSI());
 }
-
 
 // send an NTP request and wait for the result:
 unsigned long getTime() {
@@ -104,7 +102,7 @@ unsigned long getTime() {
   unsigned long result = 0;
   for (byte b = 40; b < 44; b++) {
     // move the current value left 8 bits, and add the next byte:
-    result = (result << 8) + packetBuffer[b];
+    result = (result << 8) | packetBuffer[b];
   }
   // subtract the time since 1900:
   result = result - SEVENTY_YEARS;
