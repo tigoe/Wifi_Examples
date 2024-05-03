@@ -35,7 +35,7 @@ Some sketches will add other constants to that file as well. These files are ign
 * [WiFi_ConnectionTimeLogger](https://github.com/tigoe/Wifi_examples/tree/main/WiFi_Connection_Examples/WiFi_ConnectionTimeLogger) - Logs the health of the network connection to an SD card. Periodically logs: date,time, MAC address, SSID, BSSID, IP Address, signal strength (RSSI), WiFi status, reconnect count, and uptime.
 * [WiFI_ipAddress](https://github.com/tigoe/Wifi_examples/tree/main/WiFi_Connection_Examples/WiFi_ipAddress) - The IP address in the WiFi libraries is a 4-byte array. This example shows how to get it as a String.
 * [Connecting to Eduroam](eduroam.md) Can't connect easily to your school's WiFi? Try Eduroam. 
-* [WiFI_ESP_eduroam_connection](https://github.com/tigoe/Wifi_examples/tree/main/WiFi_Connection_Examples/WiFI_ESP_eduroam_connection/WiFI_ESP_eduroam_connection.ino) - This example shows how to connect to [eduroam](eduroam.md) networks using the ESP32 WiFi library. 
+* [WiFI_ESP_eduroam_connection](https://github.com/tigoe/Wifi_examples/blob/main/WiFi_Connection_Examples/WIFi_ESP_eduroam_connection/WIFi_ESP_eduroam_connection.ino) - This example shows how to connect to [eduroam](eduroam.md) networks using the ESP32 WiFi library. 
 
 ## Arduino HTTP Clients
 * [HttpClientSimple](https://github.com/tigoe/Wifi_examples/tree/main/ArduinoHttpClient_Examples/HttpClientSimple) - a simple example of an HTTP client. 
