@@ -13,13 +13,13 @@ To connect to eduroam, you need a few extra credntials:
 
 Make sure to NEVER EVER upload your credentials to a public server. On GitHub, a good solution is to keep a separate file called arduino_secrets.h in your Arduino project, and .gitignore that file, so that it's never uploaded. This is how all the examples in this repository work. 
 
-Here's the arduino_secrets.h file for a typical eduroam setup: 
+Here's the `arduino_secrets.h` file for a typical eduroam setup: 
 
 ````arduino
 #define EAP_IDENTITY ""      // use identity@institution.domain in for most institutions 
 #define EAP_USERNAME ""      // usually just a repeat of the identity
 #define EAP_PASSWORD ""   // your  password
-#define SECRET_SSID "eduroam-2.4Ghz"    // eduroam SSID
+#define SECRET_SSID "eduroam"    // eduroam SSID
 ````
 
 To test this, use the sketch [WiFI_ESP_eduroam_connection](https://github.com/tigoe/Wifi_examples/tree/main/WiFi_Connection_Examples/WiFI_ESP_eduroam_connection). This sketch will connect, print out the board's IP address and the SSID, and then print the WiFi signal strength once every two seconds. Depending on the institution, you may find that it takes several attempts for the board to connect. 
