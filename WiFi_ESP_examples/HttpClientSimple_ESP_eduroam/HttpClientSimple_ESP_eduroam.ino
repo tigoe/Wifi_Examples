@@ -8,6 +8,12 @@
   version of eduroam still implements 2.4Ghz. At AAU-Copenhagen, for example,
   there is a separate network called eduroam-2.4Ghz. 
 
+  Here's what your arduino_secrets.h file should look like:
+  #define EAP_IDENTITY ""      // use identity@institution.domain in for most institutions 
+  #define EAP_USERNAME ""      // usually just a repeat of the identity
+  #define EAP_PASSWORD ""      // your  password
+  #define SECRET_SSID "eduroam"    // eduroam SSID
+
   Uses the following libraries:
   http://librarymanager/All#ArduinoHttpClient
   
@@ -22,8 +28,7 @@
 #include <ArduinoHttpClient.h>
 
 WiFiClient netSocket;                       // network socket to server
-// const char server[] = "www.example.com";         // server name
-const char server[] = "172.17.134.255";         // server name
+const char server[] = "www.example.com";         // server name
 HttpClient request(netSocket, server, 8000);  // make an HTTP client
 String route = "/";                         // API route
 // request timestamp in ms:
