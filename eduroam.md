@@ -22,7 +22,7 @@ Here's the `arduino_secrets.h` file for a typical eduroam setup:
 #define SECRET_SSID "eduroam"    // eduroam SSID
 ````
 
-To test this, use the sketch [WiFI_ESP_eduroam_connection](https://github.com/tigoe/Wifi_examples/tree/main/WiFi_Connection_Examples/WiFI_ESP_eduroam_connection). This sketch will connect, print out the board's IP address and the SSID, and then print the WiFi signal strength once every two seconds. Depending on the institution, you may find that it takes several attempts for the board to connect. 
+To test this, use the sketch [WiFI_ESP_eduroam_connection](https://github.com/tigoe/Wifi_examples/tree/main/WiFi_Connection_Examples/WiFI_ESP_eduroam_connection/WiFI_ESP_eduroam_connection.ino). This sketch will connect, print out the board's IP address and the SSID, and then print the WiFi signal strength once every two seconds. Depending on the institution, you may find that it takes several attempts for the board to connect. 
 
 Once you're connected, you can use this same basic approach for connecting to eduroam for any application. The following examples should work over eduroam:
 
