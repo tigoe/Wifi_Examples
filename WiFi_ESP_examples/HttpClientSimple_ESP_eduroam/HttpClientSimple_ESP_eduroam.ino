@@ -5,7 +5,7 @@
   and on eduroam at Aalborg University Copenhagen.
   Note that the WiFi radio on the ESP uses 2.4GHz,
   so you should check to see if your institution's 
-  version of eduroam still implements 2.4Ghz. At AAU-Copenhagen, for example,
+  version of eduroam still implements 2.4Ghz. At some institutions, for example,
   there is a separate network called eduroam-2.4Ghz. 
 
   Here's what your arduino_secrets.h file should look like:

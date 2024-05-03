@@ -11,6 +11,12 @@
   version of eduroam still implements 2.4Ghz. At AAU-Copenhagen, for example,
   there is a separate network called eduroam-2.4Ghz. 
 
+  Here's what your arduino_secrets.h file should look like:
+  #define EAP_IDENTITY ""      // use identity@institution.domain in for most institutions 
+  #define EAP_USERNAME ""      // usually just a repeat of the identity
+  #define EAP_PASSWORD ""      // your  password
+  #define SECRET_SSID "eduroam"    // eduroam SSID
+
   Uses the OSC library by Adrian Freed and Yotam Man
   https://github.com/CNMAT/OSC
   http://librarymanager/All#WiFiUDP
