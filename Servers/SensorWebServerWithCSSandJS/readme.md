@@ -79,7 +79,7 @@ Setting the actual response for the index, css, and js requests is done by popul
 ````arduino
 #define INDEXHTML ""
 ````
-Then add a backslash line exender, `\`, to the end of each line. Make sure any single or double quotes are escaped with the backslash as well. You can see the results in [`index.h`](https://github.com/tigoe/Wifi_examples/tree/main/Servers/SensorWebServerWithCSSandJS/index.h), [`styles.h`](https://github.com/tigoe/Wifi_examples/tree/main/Servers/SensorWebServerWithCSSandJS/styles.h), and [`script.h`](https://github.com/tigoe/Wifi_examples/tree/main/Servers/SensorWebServerWithCSSandJS/script.h). 
+Then add a backslash line exender, `\`, to the end of each line. Make sure any single or double quotes are escaped with the backslash as well. You can see the results in [index.h](https://github.com/tigoe/Wifi_examples/tree/main/Servers/SensorWebServerWithCSSandJS/index.h), [styles.h](https://github.com/tigoe/Wifi_examples/tree/main/Servers/SensorWebServerWithCSSandJS/styles.h), and [script.h](https://github.com/tigoe/Wifi_examples/tree/main/Servers/SensorWebServerWithCSSandJS/script.h). 
 
 The response for `/readings` is a custom function that generates a JSON string that looks like this:
 
