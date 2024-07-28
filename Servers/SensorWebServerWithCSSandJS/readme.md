@@ -84,7 +84,7 @@ Then add a backslash line exender, `\`, to the end of each line. Make sure any s
 The response for `/readings` is a custom function that generates a JSON string that looks like this:
 
 ````json
-{mcpTemp: 86, humidity: 38.3, dhtTemp: 83.48}
+{"mcpTemp": 86, "humidity": 38.3, "dhtTemp": 83.48}
 ````
 When the server responds to a requests for `/readings`, it sends this JSON as content type `text/json`. At this point, the Arduino sketch's work is done, and the rest is handled by the HTML and JavaScript that it served.
 
