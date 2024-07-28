@@ -1,6 +1,6 @@
 # Sensor Web Server With CSS and JS
 
-This example  ([link to code here](https://github.com/tigoe/Wifi_examples/tree/main/Servers/SensorWebServerWithCSSandJS)) shows how to make a web server program to serve sensor values. Unlike the [Uptime Web Server](https://github.com/tigoe/Wifi_examples/tree/main/Servers/UptimeServer/), which only responds to one request, or the [Simpler Web Server](https://github.com/tigoe/Wifi_examples/tree/main/Servers/SimplerWebServer/) example, which responds to two, this example shows how to parse and respond to multiple possible request. Specfically, it responds to a request for the root, `/`, or the index page, `index.html`. It also serves a `styles.css` page and a `script.js` page, and a custom request for `readings`. Using this approach, you can construct a more complex API for the server.
+This example  ([link to code here](https://github.com/tigoe/WiFi_Examples/tree/main/Servers/SensorWebServerWithCSSandJS)) shows how to make a web server program to serve sensor values. Unlike the [Uptime Web Server](https://github.com/tigoe/WiFi_Examples/tree/main/Servers/UptimeServer/), which only responds to one request, or the [Simpler Web Server](https://github.com/tigoe/WiFi_Examples/tree/main/Servers/SimplerWebServer/) example, which responds to two, this example shows how to parse and respond to multiple possible request. Specfically, it responds to a request for the root, `/`, or the index page, `index.html`. It also serves a `styles.css` page and a `script.js` page, and a custom request for `readings`. Using this approach, you can construct a more complex API for the server.
 
 
 ## The Arduino Sketch
@@ -26,7 +26,7 @@ if (client) {
   if (Serial) Serial.println("client disconnected");
 }
 ````
-The centerpiece of the sketch is the way it handles incoming text from the client. Like the [Simpler Web Server](https://github.com/tigoe/Wifi_examples/tree/main/Servers/SimplerWebServer/) example, it uses the String class' parsing functions. First, it reads the incoming request one line at a time, using the `.readStringUntil()` function to look for a newline (`\n`). If the resulting string is empty, ending only in a return character (`\r`) , you've reached the end of the request, so you process it, sending the HTTP response value, the content type, and any additional header characteristics, like `Connection: close`, like so:
+The centerpiece of the sketch is the way it handles incoming text from the client. Like the [Simpler Web Server](https://github.com/tigoe/WiFi_Examples/tree/main/Servers/SimplerWebServer/) example, it uses the String class' parsing functions. First, it reads the incoming request one line at a time, using the `.readStringUntil()` function to look for a newline (`\n`). If the resulting string is empty, ending only in a return character (`\r`) , you've reached the end of the request, so you process it, sending the HTTP response value, the content type, and any additional header characteristics, like `Connection: close`, like so:
 
 ````arduino
 // read until you get a newline character
@@ -79,7 +79,7 @@ Setting the actual response for the index, css, and js requests is done by popul
 ````arduino
 #define INDEXHTML ""
 ````
-Then add a backslash line exender, `\`, to the end of each line. Make sure any single or double quotes are escaped with the backslash as well. You can see the results in [index.h](https://github.com/tigoe/Wifi_examples/tree/main/Servers/SensorWebServerWithCSSandJS/index.h), [styles.h](https://github.com/tigoe/Wifi_examples/tree/main/Servers/SensorWebServerWithCSSandJS/styles.h), and [script.h](https://github.com/tigoe/Wifi_examples/tree/main/Servers/SensorWebServerWithCSSandJS/script.h). 
+Then add a backslash line exender, `\`, to the end of each line. Make sure any single or double quotes are escaped with the backslash as well. You can see the results in [index.h](https://github.com/tigoe/WiFi_Examples/tree/main/Servers/SensorWebServerWithCSSandJS/index.h), [styles.h](https://github.com/tigoe/WiFi_Examples/tree/main/Servers/SensorWebServerWithCSSandJS/styles.h), and [script.h](https://github.com/tigoe/WiFi_Examples/tree/main/Servers/SensorWebServerWithCSSandJS/script.h). 
 
 The response for `/readings` is a custom function that generates a JSON string that looks like this:
 

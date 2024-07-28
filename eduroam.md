@@ -22,12 +22,12 @@ Here's the `arduino_secrets.h` file for a typical eduroam setup:
 #define SECRET_SSID "eduroam"    // eduroam SSID
 ````
 
-To test this, use the sketch [WiFI_ESP_eduroam_connection](https://github.com/tigoe/Wifi_examples/blob/main/WiFi_Connection_Examples/WIFi_ESP_eduroam_connection/WIFi_ESP_eduroam_connection.ino). This sketch will connect, print out the board's IP address and the SSID, and then print the WiFi signal strength once every two seconds. Depending on the institution, you may find that it takes several attempts for the board to connect. 
+To test this, use the sketch [WiFI_ESP_eduroam_connection](https://github.com/tigoe/WiFi_Examples/blob/main/WiFi_Connection_Examples/WIFi_ESP_eduroam_connection/WIFi_ESP_eduroam_connection.ino). This sketch will connect, print out the board's IP address and the SSID, and then print the WiFi signal strength once every two seconds. Depending on the institution, you may find that it takes several attempts for the board to connect. 
 
 Once you're connected, you can use this same basic approach for connecting to eduroam for any application. The following examples should work over eduroam:
 
-* [HttpClientSimple_ESP_eduroam](https://github.com/tigoe/Wifi_examples/tree/main/WiFi_ESP_examples/HttpClientSimple_ESP_eduroam/HttpClientSimple_ESP_eduroam.ino) An HTTP client that connects to www.example.com
-* [WifiUDP_OSC_Button_Client_ESP32_eduroam](https://github.com/tigoe/Wifi_examples/tree/main/WiFi_ESP_examples/WifiUDP_OSC_Button_Client_ESP32_eduroam/WifiUDP_OSC_Button_Client_ESP32_eduroam.ino) - an OSC client that connects to a remote OSC server when you press a button attached to digital pin 2
+* [HttpClientSimple_ESP_eduroam](https://github.com/tigoe/WiFi_Examples/tree/main/WiFi_ESP_examples/HttpClientSimple_ESP_eduroam/HttpClientSimple_ESP_eduroam.ino) An HTTP client that connects to www.example.com
+* [WifiUDP_OSC_Button_Client_ESP32_eduroam](https://github.com/tigoe/WiFi_Examples/tree/main/WiFi_ESP_examples/WifiUDP_OSC_Button_Client_ESP32_eduroam/WifiUDP_OSC_Button_Client_ESP32_eduroam.ino) - an OSC client that connects to a remote OSC server when you press a button attached to digital pin 2
 
 
 
