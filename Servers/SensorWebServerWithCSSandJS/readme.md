@@ -1,6 +1,6 @@
 # Sensor Web Server With CSS and JS
 
-This example shows how to make a web server program to serve sensor values. Unlike the [Uptime Web Server](../UptimeServer/), which only responds to one request, or the [Simpler Web Server](../SimplerWebServer/) example, which responds to two, this example shows how to parse and respond to multiple possible request. Specfically, it responds to a request for the root, `/`, or the index page, `index.html`. It also serves a `styles.css` page and a `script.js` page, and a custom request for `readings`. Using this approach, you can construct a more complex API for the server.
+This example  ([link to code here](../SensorWebServerWithCSSandJS/)) shows how to make a web server program to serve sensor values. Unlike the [Uptime Web Server](../UptimeServer/), which only responds to one request, or the [Simpler Web Server](../SimplerWebServer/) example, which responds to two, this example shows how to parse and respond to multiple possible request. Specfically, it responds to a request for the root, `/`, or the index page, `index.html`. It also serves a `styles.css` page and a `script.js` page, and a custom request for `readings`. Using this approach, you can construct a more complex API for the server.
 
 
 ## The Arduino Sketch
