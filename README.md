@@ -48,7 +48,7 @@ Some sketches will add other constants to that file as well. These files are ign
 * [SimplerWebServer](https://github.com/tigoe/Wifi_examples/tree/main/Servers/SimplerWebServer) - a stripped-down example of how to respond to HTTP requests
 * [NetworkClientLogger](https://github.com/tigoe/Wifi_examples/tree/main/Servers/NetworkClientLogger) - listens on a number of popular ports (HTTP, SMTP, SSH, etc) and logs to an SD card all client connnection attempts
 * [UptimeServer](https://github.com/tigoe/Wifi_examples/tree/main/Servers/UptimeServer) - a web server that reports the device's uptime when it receives an HTTP request. 
-* [SensorWebServerWithCSSandJS](https://github.com/tigoe/Wifi_examples/tree/main/Servers/Servers/SensorWebServerWithCSSandJS) - a web server that reports reads sensors and delivers them as JSON when it receives an HTTP request. This example also shows how to serve an index.html, styles.css, and script.js file separately. 
+* [SensorWebServerWithCSSandJS](https://github.com/tigoe/Wifi_examples/tree/main/Servers/SensorWebServerWithCSSandJS) - a web server that reports reads sensors and delivers them as JSON when it receives an HTTP request. This example also shows how to serve an index.html, styles.css, and script.js file separately. 
 
 ## TCP and UDP Examples
 * [simpleTCPClient](https://github.com/tigoe/Wifi_examples/tree/main/simpleTCPClient) - makes a TCP connection to a remote * host and sends a message every ten seconds
