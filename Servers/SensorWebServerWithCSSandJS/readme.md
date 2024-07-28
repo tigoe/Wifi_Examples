@@ -94,14 +94,14 @@ The HTML for this application is made up of a bunch of SPAN elements, some of wh
 <!DOCTYPE html> 
 <html> 
 <head> 
-  <link rel=\"stylesheet\" href=\"styles.css\"> 
-  <script src=\"script.js\"></script> 
+  <link rel="stylesheet" href="styles.css"> 
+  <script src="script.js"></script> 
   <title>Temperature</title> 
 </head> 
 <body> 
-    <span class=\"name\">MCP9808 Temp: </span><span class=\"value\" id=\"mcpTemp\"></span><span class=\"units\">&deg;F<br></span> 
-    <span class=\"name\">DHT22 Temp: </span><span class=\"value\" id=\"dhtTemp\"></span><span class=\"units\">&deg;F</span><br> 
-    <span class=\"name\">DHT22 Humidity: </span><span class=\"value\" id=\"humidity\"></span><span class=\"units\">%</span><br> 
+    <span class="name">MCP9808 Temp: </span><span class="value" id="mcpTemp"></span><span class="units">&deg;F<br></span> 
+    <span class="name">DHT22 Temp: </span><span class="value" id="dhtTemp"></span><span class="units">&deg;F</span><br> 
+    <span class="name">DHT22 Humidity: </span><span class="value" id="humidity"></span><span class="units">%</span><br> 
 </body> 
 </html>
 ````
@@ -109,7 +109,7 @@ The HTML for this application is made up of a bunch of SPAN elements, some of wh
 ## The CSS
 The stylesheet doesn't do much other than set the positions of the HTML SPAN elements:
 
-`````css
+````css
 span.name { 
   position: sticky; 
   left: 20px; 
@@ -123,7 +123,6 @@ span.units {
   left: 200px;
 }
 ````
-
 ## The Javascript
 The JavaScript in `script.js` processes this on the server side. When the page loads in the browser, the script calls setup, which sets an interval function running every three seconds:
 
@@ -164,5 +163,4 @@ function getResponse(data) {
   }
 }
 ````
-
 That's the whole application. The Arduino server isn't a high-volume server, as it doesn't multi-thread or handle simultaneous requests. But, by separating the HTML, CSS, JS, and custom requests, you can design your web app on a desktop or server, then quickly move it to the microcontroller when you're ready. Or you can serve all of it from a dedicated server except the sensor values, using mostly the same content files to do so. 
