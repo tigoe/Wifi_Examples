@@ -17,12 +17,10 @@
   by Tom Igoe
 */
 
-// include the sensor libraries:
+// include the sensor libraries and the WiFI library:
 #include "Adafruit_MCP9808.h"
 #include "DHT.h"
-
-// Digital pin that the DHT sensor is connected to:
-#include <SPI.h>
+// this is the Nano 33 IoT library. Change to match your board:
 #include <WiFiNINA.h>
 // include the WiFi network SSID and password:
 #include "arduino_secrets.h"
@@ -51,8 +49,10 @@ void setup() {
   }
   // When you're connected, print out the device's network status:
   IPAddress ip = WiFi.localIP();
-  if (Serial) Serial.print("IP Address: ");
-  if (Serial) Serial.println(ip);
+  if (Serial) {
+    Serial.print("IP Address: ");
+    Serial.println(ip);
+  }
   // start the server:
   server.begin();
   // start the MCP sensor:
@@ -86,7 +86,7 @@ void loop() {
         // if you only get a return character, then you've reached the end
         // of the request. You can send a response:
         if (input == "\r") {
-          Serial.println("request finished");
+          if (Serial) Serial.println("request finished");
           // send a standard HTTP response header
           client.println("HTTP/1.1 200 OK");
           // set the content type (HTML, CSS, or JS):
