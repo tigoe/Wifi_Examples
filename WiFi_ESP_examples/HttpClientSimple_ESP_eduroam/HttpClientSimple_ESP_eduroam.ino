@@ -29,7 +29,7 @@
 
 WiFiClient netSocket;                       // network socket to server
 const char server[] = "www.example.com";         // server name
-HttpClient request(netSocket, server, 8000);  // make an HTTP client
+HttpClient request(netSocket, server, 80);  // make an HTTP client
 String route = "/";                         // API route
 // request timestamp in ms:
 long lastRequest = 0;
