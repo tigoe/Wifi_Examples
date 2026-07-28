@@ -9,3 +9,5 @@ ConnectedDevices/sql_queries.txt
 *.elf
 *.hex
 *.map
+WiFi_ESP_examples/HttpsClientSimple_ESP/arduino_secrets.h
+WiFi_ESP_examples/HttpsClientSimple_ESP_eduroam/arduino_secrets.h
