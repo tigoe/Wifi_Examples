@@ -4,6 +4,14 @@
 #define SECRET_SSID "eduroam"    // eduroam SSID
 
 
+/*  
+Replace the certificate below with the body of your root CA certificate here. 
+To obtain the cert for any site, go to https://www.ssl.org/ and enter the URL. 
+From the resulting certificates, choose the root CA. 
+For more info on SSL certificates,  see 
+https://www.cloudflare.com/learning/ssl/how-does-ssl-work/
+*/
+
 const char* rootCACertificate = R"(
 -----BEGIN CERTIFICATE-----
 MIICOjCCAcCgAwIBAgIQFAP1q/s3ixdAW+JDsqXRxDAKBggqhkjOPQQDAzBOMQsw
