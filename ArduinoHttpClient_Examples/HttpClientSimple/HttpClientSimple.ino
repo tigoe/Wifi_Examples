@@ -11,8 +11,9 @@
 */
 // include required libraries and config files
 //#include <WiFi101.h>      // use this for MKR1000 boards
-// #include <WiFiNINA.h>  // use this for MKR1010 and Nano 33 IoT boards
-#include <WiFiS3.h>  // use this for the Uno R4 WiFi
+// #include <WiFiNINA.h>    // use this for MKR1010 and Nano 33 IoT boards
+#include <WiFiS3.h>         // use this for the Uno R4 WiFi
+#include <WiFi.h>           // use this for the ESP32-based boards
 #include <ArduinoHttpClient.h>
 #include "arduino_secrets.h"
 
