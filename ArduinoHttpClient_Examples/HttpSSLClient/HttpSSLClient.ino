@@ -15,11 +15,13 @@
 */
 
 // include required libraries and config files
-#include <SPI.h>
-#include <WiFiS3.h>  // use this  for Uno R4 WiFi modules
-// #include <WiFiNINA.h>           // use this  for MKR1010/Nano 33 IoT modules
-//#include <WiFi101.h>          // use this  for MKR1000/WINC1500 modules
-//#include <ESP8266WiFi.h>      // use this for ESP8266 modules
+// #include <WiFi.h>  // use this  for Uno R4 WiFi modules
+
+// #include <WiFi.h>          // use this  for Uno R4 WiFi modules
+// #include <WiFiNINA.h       // use this  for MKR1010/Nano 33 IoT modules
+//#include <WiFi101.h>        // use this  for MKR1000/WINC1500 modules
+// #include <ESP8266WiFi.h>   // use this for ESP8266 modules
+ 
 #include <ArduinoHttpClient.h>
 #include "arduino_secrets.h"  // tab for the SSID and password
 
