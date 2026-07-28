@@ -22,16 +22,16 @@
   by Tom Igoe
 */
 #include <SPI.h>
-// #include <WiFiNINA.h>  // use this for MKR1010 board and Nano 33 IoT
+#include <WiFiNINA.h>  // use this for MKR1010 board and Nano 33 IoT
 // #include <WiFi101.h>       // use this for the MKR1000 board
-#include <WiFiS3.h>        // use this for the Uno R4 WiFi board
+// #include <WiFiS3.h>        // use this for the Uno R4 WiFi board
 // #include <WiFi.h>             // use this for the Nano ESP32 board
 #include "arduino_secrets.h"
 
 // Initialize the Wifi client library
 WiFiClient client;
 // the address and port of the server
-const char serverAddress[] = "192.168.1.91";
+const char serverAddress[] = "10.20.7.169";
 int port = 8080;
 
 // request timestamp in ms:
