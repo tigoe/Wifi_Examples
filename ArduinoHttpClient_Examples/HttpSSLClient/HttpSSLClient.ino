@@ -18,7 +18,7 @@
 
 // include required libraries and config files
 // #include <WiFi.h>          // use this  for Uno R4 WiFi modules
- #include <WiFiNINA.h>        // use this  for MKR1010/Nano 33 IoT modules
+ #include <WiFiNINA.h>        // use this  for MKR1010/Nano 33 IoT/Nano RP2040 Connect modules
 //#include <WiFi101.h>        // use this  for MKR1000/WINC1500 modules
 
 #include <ArduinoHttpClient.h>

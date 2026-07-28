@@ -1,5 +1,5 @@
 #define SECRET_SSID ""         // your  password
-#define SECRET_PASSWORD "!"    // your SSID
+#define SECRET_PASSWORD ""    // your SSID
 
 /*  
 Replace the certificate below with the body of your root CA certificate here. 
