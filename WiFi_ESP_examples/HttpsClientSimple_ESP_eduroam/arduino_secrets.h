@@ -1,7 +1,16 @@
+/*
+some schools might have a separate 2.4Ghz network possibly named eduroam-2.4Ghz. 
+That is the network you would need for microcontrollers.
+
+For more on this, see
+ https://github.com/espressif/arduino-esp32/blob/master/libraries/WiFi/examples/WiFiClientEnterprise/WiFiClientEnterprise.ino
+
+*/
+
 #define EAP_IDENTITY ""      // use identity@institution.domain in for most institutions 
 #define EAP_USERNAME ""      // usually just a repeat of the identity
 #define EAP_PASSWORD ""   // your  password
-#define SECRET_SSID "eduroam"    // eduroam SSID
+#define SECRET_SSID "eduroam"           // eduroam SSID
 
 
 /*  
