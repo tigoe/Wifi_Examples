@@ -12,14 +12,14 @@
 // include required libraries and config files
 //#include <WiFi101.h>      // use this for MKR1000 boards
 // #include <WiFiNINA.h>    // use this for MKR1010 and Nano 33 IoT boards
-#include <WiFiS3.h>         // use this for the Uno R4 WiFi
+// #include <WiFiS3.h>         // use this for the Uno R4 WiFi
 #include <WiFi.h>           // use this for the ESP32-based boards
 #include <ArduinoHttpClient.h>
 #include "arduino_secrets.h"
 
 WiFiClient netSocket;                       // network socket to server
-HttpClient request(netSocket, server, 80);  // make an HTTP client
 const char server[] = "arduino.cc";         // server name
+HttpClient request(netSocket, server, 80);  // make an HTTP client
 String route = "/";                         // API route
 // request timestamp in ms:
 long lastRequest = 0;
