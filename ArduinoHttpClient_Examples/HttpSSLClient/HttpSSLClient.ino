@@ -12,7 +12,7 @@
   https://github.com/tigoe/Wifi_Examples/tree/main/WiFi_ESP_examples/HttpsClientSimple_ESP
   
   created 12 Feb 2018
-  modified 28 Jul 2026
+  modified 16 Nov. 2026
   by Tom Igoe
 */
 
@@ -24,8 +24,8 @@
 #include <ArduinoHttpClient.h>
 #include "arduino_secrets.h"  // tab for the SSID and password
 
-WiFiSSLClient sslClient;                   // WIFi SSL socket connection
-const char server[] = "www.example.com";      // server name
+WiFiSSLClient sslClient;                      // WIFi SSL socket connection
+const char server[] = "www.icanhazip.com";    // server name
 String route = "/";                           // API route
 HttpClient request(sslClient, server, 443);   // HTTP request object
 
