@@ -15,3 +15,6 @@ ArduinoHttpClient_Examples/HttpSSLClient/arduino_secrets.h
 WiFi_ESP_examples/HttpsClientSimple_ESP_eduroam/arduino_secrets.h
 WiFi_ESP_examples/HttpsClientSimple_ESP_eduroam/arduino_secrets.h
 WiFi_ESP_examples/HttpsClientSimple_ESP/arduino_secrets.h
+WiFi_ESP_examples/HttpsClientSimple_ESP/arduino_secrets.h
+ArduinoHttpClient_Examples/HttpSSLClient/arduino_secrets.h
+WiFi_ESP_examples/HttpsClientSimple_ESP_eduroam/arduino_secrets.h
