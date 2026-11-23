@@ -6,7 +6,7 @@ The [Uno R4 WiFi board](https://docs.arduino.cc/hardware/uno-r4-wifi/) also has 
 `WiFiS3.h`. 
 
 ## Scanning for WiFi and Connecting
-A good place to start with these examples is the [WiFiScanNetworksESP]({{site.baseurl}WiFi_ESP_examples/WiFiScanNetworksESP/) example. This example will scan for nearby networks. It will also print out your board's MAC address, which you may need to connect to a University network. 
+A good place to start with these examples is the [WiFiScanNetworksESP]({{site.baseurl}}WiFi_ESP_examples/WiFiScanNetworksESP/) example. This example will scan for nearby networks. It will also print out your board's MAC address, which you may need to connect to a University network. 
 
 ## WPA2 Enterprise Examples and Eduroam
 One of the key differences between the ESP32 WiFi library and the [WiFiNINA](https://docs.arduino.cc/libraries/wifinina/) and [WiFi101](https://docs.arduino.cc/libraries/wifi101/) libraries for other Arduino boards is that the ESP32 library includes support for enterprise WPA2 networks, using the `esp_wpa2.h` library. You can see this in action in these examples:
