@@ -4,11 +4,11 @@
   The included arduino_secrets.h file details the credentials you'll need
 
   Uses the following libraries:
-    ESP32 WiFiClientSecure
+  ESP32 WiFiClientSecure
   ESP32 WiFi
   http://librarymanager/All#ArduinoHttpClient
 
-  modified 28 July 2026
+  modified 23 Nov 2026
   by Tom Igoe
 */
 

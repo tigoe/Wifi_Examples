@@ -1,5 +1,7 @@
-#define SECRET_SSID ""         // your  password
-#define SECRET_PASSWORD ""    // your SSID
+// #define SECRET_SSID ""         // your  password
+// #define SECRET_PASSWORD ""    // your SSID
+#define SECRET_SSID ""    
+#define SECRET_PASSWORD ""
 
 /*  
 Replace the certificate below with the body of your root CA certificate here. 
@@ -9,7 +11,8 @@ For more info on SSL certificates,  see
 https://www.cloudflare.com/learning/ssl/how-does-ssl-work/
 */
 
-const char* rootCACertificate = R"(
+
+const char rootCACertificate[] = R"(
 -----BEGIN CERTIFICATE-----
 MIICOjCCAcCgAwIBAgIQFAP1q/s3ixdAW+JDsqXRxDAKBggqhkjOPQQDAzBOMQsw
 CQYDVQQGEwJVUzEYMBYGA1UECgwPU1NMIENvcnBvcmF0aW9uMSUwIwYDVQQDDBxT

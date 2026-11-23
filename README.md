@@ -1,6 +1,6 @@
 # Wifi Examples
 
-These examples are for the Arduino WiFi libraries. These examples will work with:  the Arduino [MKR1000](https://store.arduino.cc/usa/arduino-mkr1000) board; the [MKR1010](https://store.arduino.cc/usa/mkr-wifi-1010); [Nano 33 IoT](https://store.arduino.cc/usa/nano-33-iot) board; [Uno WiFi rev 2](https://store.arduino.cc/usa/arduino-uno-wifi-rev2) boards; the [Uno R4 WiFi](https://docs.arduino.cc/hardware/uno-r4-wifi) board; and the [Nano ESP32](https://docs.arduino.cc/hardware/nano-esp32) board.
+These examples are for the Arduino WiFi libraries. These examples will work with:  the Arduino [MKR1000](https://store.arduino.cc/usa/arduino-mkr1000) board; the [MKR1010](https://store.arduino.cc/usa/mkr-wifi-1010); [Nano 33 IoT](https://store.arduino.cc/usa/nano-33-iot) board; [Uno WiFi rev 2](https://store.arduino.cc/usa/arduino-uno-wifi-rev2) boards; the [Uno R4 WiFi](https://docs.arduino.cc/hardware/uno-r4-wifi) board; and the [Nano ESP32](https://docs.arduino.cc/hardware/nano-esp32) board; and the Seeed Xiao ESP32S3 and ESP32C3 boards.
 
  The libraries for these boards should be API-compatible with each other in these examples, though some will have features that others do not. Any library-specific examples in this repository are noted as such.
  
@@ -35,7 +35,7 @@ Some sketches will add other constants to that file as well. These files are ign
 * [WiFi_ConnectionTimeLogger](https://github.com/tigoe/WiFi_Examples/tree/main/WiFi_Connection_Examples/WiFi_ConnectionTimeLogger) - Logs the health of the network connection to an SD card. Periodically logs: date,time, MAC address, SSID, BSSID, IP Address, signal strength (RSSI), WiFi status, reconnect count, and uptime.
 * [WiFI_ipAddress](https://github.com/tigoe/WiFi_Examples/tree/main/WiFi_Connection_Examples/WiFi_ipAddress) - The IP address in the WiFi libraries is a 4-byte array. This example shows how to get it as a String.
 * [Connecting to Eduroam](eduroam.md) Can't connect easily to your school's WiFi? Try Eduroam. 
-* [WiFI_ESP_eduroam_connection](https://github.com/tigoe/WiFi_Examples/blob/main/WiFi_Connection_Examples/WIFi_ESP_eduroam_connection/WIFi_ESP_eduroam_connection.ino) - This example shows how to connect to [eduroam](eduroam.md) networks using the ESP32 WiFi library. 
+* [WiFI_ESP_eduroam_connection](https://github.com/tigoe/WiFi_Examples/blob/main/WiFi_Connection_Examples/WIFi_ESP_eduroam_connection/WIFi_ESP_eduroam_connection.ino) - This example shows how to connect to [eduroam](eduroam.md) networks using the ESP32 WiFi library. For more information on the ESP32 WiFi connection examples, see [this link](WiFi_ESP_examples/readme.md#WPA2-Enterprise-Examples-and Eduroam). 
 
 ## Arduino HTTP Clients
 * [HttpClientSimple](https://github.com/tigoe/WiFi_Examples/tree/main/ArduinoHttpClient_Examples/HttpClientSimple) - a simple example of an HTTP client. 
@@ -43,6 +43,7 @@ Some sketches will add other constants to that file as well. These files are ign
 * [HttpClientRemoteStatusCheck](https://github.com/tigoe/WiFi_Examples/tree/main/ArduinoHttpClient_Examples/HttpClientRemoteStatusCheck) - sends an HTTP request once a minute. Shows how to use the RTC alarm functions to set a timed event. Also listens on a UDP port so you can check when the last successful request was made. Designed to log sensor data over HTTP, while letting you check that it's still working over UDP, so you don't have to disconnect it from the network to see how it's doing. 
 * [HttpSSLClient_OLED](https://github.com/tigoe/WiFi_Examples/tree/main/ArduinoHttpClient_Examples/HttpSSLClient_OLED) - makes an HTTPS call and displays the result on an SSD1306 OLED. Shows some String manipulation techniques as well.
 * [ConnDevClient](https://github.com/tigoe/WiFi_Examples/tree/main/ArduinoHttpClient_Examples/ConnDevClient) - an HTTPS client for the the  [Connected Devices server](https://github.com/don/itp-connected-devices`), written by Mathura Govindarajan and Don Coleman
+* For more information on the ESP32 WiFi HTTP Client examples, see [this link](WiFi_ESP_examples/readme.md#HTTPS Examples-and-Root-Certificates-for-SSL). 
 
 ## HTTP Servers
 * [SimplerWebServer](https://github.com/tigoe/WiFi_Examples/tree/main/Servers/SimplerWebServer) - a stripped-down example of how to respond to HTTP requests
