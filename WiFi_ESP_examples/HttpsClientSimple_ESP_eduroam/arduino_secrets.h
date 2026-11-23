@@ -21,7 +21,7 @@ For more info on SSL certificates,  see
 https://www.cloudflare.com/learning/ssl/how-does-ssl-work/
 */
 
-const char* rootCACertificate = R"(
+const char rootCACertificate[] =  R"(
 -----BEGIN CERTIFICATE-----
 MIICOjCCAcCgAwIBAgIQFAP1q/s3ixdAW+JDsqXRxDAKBggqhkjOPQQDAzBOMQsw
 CQYDVQQGEwJVUzEYMBYGA1UECgwPU1NMIENvcnBvcmF0aW9uMSUwIwYDVQQDDBxT

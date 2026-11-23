@@ -25,7 +25,7 @@
 #include "arduino_secrets.h"
 
 WiFiClientSecure sslClient;                  // WIFi SSL socket connection
-const char server[] = "www.icanhazip.com";     // server name
+const char server[] = "www.example.com";     // server name
 String route = "/";    // API route
 HttpClient request(sslClient, server, 443);  // HTTP request object
 
