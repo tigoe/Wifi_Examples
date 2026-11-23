@@ -15,6 +15,7 @@ One of the key differences between the ESP32 WiFi library and the [WiFiNINA](htt
 
 These examples which show you how to connect to [Eduroam](https://eduroam.org/), a common WPA2 enterprise in many univerities. If you're a student or university employee, the big advantage of Eduroam is that you can use your school login credentials at other universities. This means that the same microcontroller device can run on your school's network via eduroam, or another school's. 
 
+**NOTE: Be very careful NEVER to upload your university ID or password in the <code>arduino_secrets.h</code> file.** Best practice is to .gitignore this file before ever committing it to a git repository. 
 
 ## HTTPS Examples and Root Certificates for SSL
 Another difference between the WiFiNINA and WiFi101 libraries and the ESP32 WiFi libraries is how they support secure socket layer (SSL) connections for HTTP requests. For background on what this means, see this [explainer article]( https://www.cloudflare.com/learning/ssl/how-does-ssl-work/) on how SSL works. 
