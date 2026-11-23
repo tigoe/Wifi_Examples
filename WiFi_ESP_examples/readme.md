@@ -6,12 +6,12 @@ The [Uno R4 WiFi board](https://docs.arduino.cc/hardware/uno-r4-wifi/) also has 
 `WiFiS3.h`. 
 
 ## Scanning for WiFi and Connecting
-A good place to start with these examples is the [WiFiScanNetworksESP](./WiFiScanNetworksESP/) example. This example will scan for nearby networks. It will also print out your board's MAC address, which you may need to connect to a University network. 
+A good place to start with these examples is the [WiFiScanNetworksESP](https://github.com/tigoe/WiFi_Examples/tree/main/WiFi_ESP_examples/WiFiScanNetworksESP/) example. This example will scan for nearby networks. It will also print out your board's MAC address, which you may need to connect to a University network. 
 
 ## WPA2 Enterprise Examples and Eduroam
 One of the key differences between the ESP32 WiFi library and the [WiFiNINA](https://docs.arduino.cc/libraries/wifinina/) and [WiFi101](https://docs.arduino.cc/libraries/wifi101/) libraries for other Arduino boards is that the ESP32 library includes support for enterprise WPA2 networks, using the `esp_wpa2.h` library. You can see this in action in these examples:
-*  [HttpClientSimple_ESP_eduroam](./HttpClientSimple_ESP_eduroam/)  
-* [HttpsClientSimple_ESP_eduroam](./HttpsClientSimple_ESP_eduroam/) 
+*  [HttpClientSimple_ESP_eduroam](https://github.com/tigoe/WiFi_Examples/tree/main/WiFi_ESP_examples/HttpClientSimple_ESP_eduroam/)  
+* [HttpsClientSimple_ESP_eduroam](https://github.com/tigoe/WiFi_Examples/tree/main/WiFi_ESP_examples/HttpsClientSimple_ESP_eduroam/) 
 
 These examples which show you how to connect to [Eduroam](https://eduroam.org/), a common WPA2 enterprise in many univerities. If you're a student or university employee, the big advantage of Eduroam is that you can use your school login credentials at other universities. This means that the same microcontroller device can run on your school's network via eduroam, or another school's. 
 
@@ -24,7 +24,7 @@ The ESP32 WiFi libraries are slightly different than the  WiFiNINA and WiFi101 l
 By contrast, the ESP32 WiFi library uses the [WiFiClientSecure](https://github.com/espressif/arduino-esp32/blob/master/libraries/NetworkClientSecure/src/WiFiClientSecure.h) class, part of the ESP32 [NetworkClientSecure](https://github.com/espressif/arduino-esp32/tree/master/libraries/NetworkClientSecure) library, to handle SSL clients, and it requires you to supply the root certificate for the site to which you want to connect. 
 
 Here are two HTTPClient examples for ESP32:  
-*  [HttpsClientSimple_ESP](./HttpsClientSimple_ESP)
-*  [HttpsClientSimple_ESP_eduroam](/.HttpsClientSimple_ESP_eduroam)
+*  [HttpsClientSimple_ESP](https://github.com/tigoe/WiFi_Examples/tree/main/WiFi_ESP_examples/HttpsClientSimple_ESP)
+*  [HttpsClientSimple_ESP_eduroam](https://github.com/tigoe/WiFi_Examples/tree/main/WiFi_ESP_examples/HttpsClientSimple_ESP_eduroam)
 
 In these examples, a root certificate for [www.example.com](https://www.example.com) is used to make an HTTPS connection to that same site. You can replace it with the root certificate for another site by going to [ssl.org](https://www.ssl.org/), and entering the URL for the site to which you want to connect.  From the resulting certificates, choose the root CA. Click "View/Copy PEM" and copy the text revealed there. Then open the <code>arduino_secrets.h</code> file and find the <code>rootCACertificate</code> variable. Replace the text of that variable (everything between the <code>R"(</code>  and <code>)";</code> parts) with the text of your desired Root Certificate. Then you're ready to compile and upload.
