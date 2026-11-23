@@ -6,7 +6,11 @@ The [Uno R4 WiFi board](https://docs.arduino.cc/hardware/uno-r4-wifi/) also has 
 `WiFiS3.h`. 
 
 ## WPA2 Enterprise Examples and Eduroam
-One of the key differences between the ESP32 WiFi library and the [WiFiNINA](https://docs.arduino.cc/libraries/wifinina/) and [WiFi101](https://docs.arduino.cc/libraries/wifi101/) libraries for other Arduino boards is that the ESP32 library includes support for enterprise WPA2 networks, using the `esp_wpa2.h` library. You can see this in action in the [HttpClientSimple_ESP_eduroam](HttpClientSimple_ESP_eduroam/) and [HttpsClientSimple_ESP_eduroam](HttpsClientSimple_ESP_eduroam/) examples, which show you how to connect to [Eduroam](https://eduroam.org/), a common WPA2 enterprise in many univerities. If you're a student or university employee, the big advantage of Eduroam is that you can use your school login credentials at other universities. This means that the same microcontroller device can run on your school's network via eduroam, or another school's. 
+One of the key differences between the ESP32 WiFi library and the [WiFiNINA](https://docs.arduino.cc/libraries/wifinina/) and [WiFi101](https://docs.arduino.cc/libraries/wifi101/) libraries for other Arduino boards is that the ESP32 library includes support for enterprise WPA2 networks, using the `esp_wpa2.h` library. You can see this in action in these examples:
+*  [HttpClientSimple_ESP_eduroam](HttpClientSimple_ESP_eduroam/)  
+* [HttpsClientSimple_ESP_eduroam](HttpsClientSimple_ESP_eduroam/) 
+
+These examples which show you how to connect to [Eduroam](https://eduroam.org/), a common WPA2 enterprise in many univerities. If you're a student or university employee, the big advantage of Eduroam is that you can use your school login credentials at other universities. This means that the same microcontroller device can run on your school's network via eduroam, or another school's. 
 
 
 ## HTTPS Examples and Root Certificates for SSL
